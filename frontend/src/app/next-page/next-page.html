@@ -1,5 +1,5 @@
 <div class="next-container">
-@if((api.imagelistv2 | async) && api.imagelistv2.getValue() != undefined || api.imagelistv2.getValue().length == 0)
+@if((this.imagelistv2 | async) && this.imagelistv2.getValue() != undefined || this.imagelistv2.getValue().length == 0)
 {
     @if(api.page > 1)
     {

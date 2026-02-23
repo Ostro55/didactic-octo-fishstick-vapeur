@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ImageList} from "../image-list/image-list";
 import {NextPage} from "../next-page/next-page";
 import {Overlay} from "../overlay/overlay";
 import {SearchBar} from "../search-bar/search-bar";
+import {BehaviorSubject} from "rxjs";
+import {PhotoSmall} from "../../PhotoModel";
 
 @Component({
   selector: 'app-search-page',
@@ -16,6 +18,10 @@ import {SearchBar} from "../search-bar/search-bar";
   styleUrl: './search-page.css',
 })
 export class SearchPage {
+    @Input() imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
 
-
+NgOnInit()
+{
+    console.log("test")
+}
 }
