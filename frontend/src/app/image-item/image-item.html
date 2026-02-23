@@ -1,0 +1,11 @@
+
+<div class="bordered-div" (click)="showinfo()">
+            <img [ngSrc]="image.urlthumb" [width]="image.widththumb" [height]="image.heightthumb" alt="not loaded"/>
+            @if((this.image.image | async) || autheur != "")
+            {
+                <p> auteur: {{autheur}}</p>
+                <p> title : {{title}}</p>
+                <p> date publication: {{date}}</p>
+            }
+</div>
+

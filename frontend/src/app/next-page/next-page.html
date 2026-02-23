@@ -1,0 +1,12 @@
+<div class="next-container">
+@if((api.imagelistv2 | async) && api.imagelistv2.getValue() != undefined || api.imagelistv2.getValue().length == 0)
+{
+    @if(api.page > 1)
+    {
+        <button (click)="previous()" class="next-btn">prev</button>
+
+    }
+    <button (click)="next()" class="next-btn">next</button>
+}
+
+</div>

@@ -1,0 +1,80 @@
+
+<div class="search-container">
+    <!-- Search Input -->
+    <div class="search-row">
+        <input
+                type="text"
+                [(ngModel)]="text"
+                placeholder="Search..."
+                class="search-input"
+        />
+        <button (click)="search()" class="search-btn">Search</button>
+    </div>
+
+    <!-- Date Filters -->
+    <div class="search-row">
+        <label>
+            Min upload date:
+            <input type="date" [(ngModel)]="mindate" class="date-input" />
+        </label>
+        <label>
+            Max upload date:
+            <input type="date" [(ngModel)]="maxdate" class="date-input" />
+        </label>
+    </div>
+
+    <!-- Select Filters -->
+    <div class="search-row">
+        <label>
+            Size:
+            <select [(ngModel)]="sizeselect" class="select-input">
+                @for (i of this.api.size; track $index) {
+                    <option [value]="i[0]">{{ i[0] }}</option>
+                }
+            </select>
+        </label>
+
+        <label>
+            Safe:
+            <select [(ngModel)]="safeselect" class="select-input">
+                @for (i of safe; track $index) {
+                    <option [value]="i[0]">{{ i[0] }}</option>
+                }
+            </select>
+        </label>
+
+        <label>
+            Sort:
+            <select [(ngModel)]="sortselect" class="select-input">
+                @for (i of sort; track $index) {
+                    <option [value]="i">{{ i }}</option>
+                }
+            </select>
+        </label>
+    </div>
+
+    <!-- Checkbox Filters -->
+    <div class="search-row checkbox-row">
+        <label>
+            <input type="checkbox" [(ngModel)]="is_hasgeo" />
+            Has geo
+        </label>
+        <label>
+            <input type="checkbox" [(ngModel)]="is_ingallery" />
+            In a gallery
+        </label>
+    </div>
+
+    <!-- Tag Input -->
+    <div class="search-row">
+        <input
+                type="text"
+                [(ngModel)]="texttag"
+                placeholder="tag1,tag2,..."
+                class="search-input"
+        />
+    </div>
+
+</div>
+
+

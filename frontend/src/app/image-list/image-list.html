@@ -1,0 +1,15 @@
+<div class="results-container">
+    <h2>Results:</h2>
+
+    @if (this.api.imagelistv2 | async; as l) {
+        <div class="results-grid">
+            @for (i of l; track i.id) {
+                <app-image-item
+                        [id]="i.id"
+                        [image]="i"
+                ></app-image-item>
+            }
+        </div>
+    }
+</div>
+

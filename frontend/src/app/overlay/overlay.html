@@ -1,0 +1,50 @@
+<style>
+    .overlay {
+        position: fixed;
+        display: none;
+        width: 80%;
+        height: 80%;
+        top: 10%;
+        left: 10%;
+        right: 0;
+        bottom: 0;
+        background-color: rgb(255, 255, 255);
+        z-index: 2;
+        cursor: pointer;
+        border-radius: 8px;
+        border-color: blue;
+        border-style: solid;
+
+    }
+    img{
+        max-width:1500px;
+        max-height: 1000px;
+        height: auto;
+    }
+</style>
+
+<div class="overlay" [style.display]="overlay.display">
+    <button (click)="overlay.hide()">X</button>
+    <img  [src]="overlay.photo.url" [width]="overlay.photo.width" [height]="overlay.photo.height" alt="not loaded" [style.display]="overlay.display"/>
+
+    @if( (overlay.photo.image | async) && title != "")
+    {
+        <p> auteur: {{autheur}}</p>
+        <p> title : {{title}}</p>
+        <p> date publication: {{overlay.date}}</p>
+        @if(description != "")
+        {
+            <p> description: {{description}}</p>
+        }
+        @if(lat != "")
+        {
+            <p> position: {{lat}}</p>
+            <p> location: {{location}}</p>
+        }
+
+    }
+
+</div>
+
+
+
