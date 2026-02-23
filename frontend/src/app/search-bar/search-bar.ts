@@ -1,7 +1,9 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, Input, input} from '@angular/core';
 import {FlickrService} from "../flickr-service";
 import {FormsModule} from "@angular/forms";
 import { ActivatedRoute } from '@angular/router'
+import {BehaviorSubject} from "rxjs";
+import {PhotoSmall} from "../../PhotoModel";
 
 @Component({
   selector: 'app-search-bar',
@@ -32,6 +34,8 @@ export class SearchBar {
 
   constructor(private activateRoute: ActivatedRoute){}
 
+  @Input() imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
+
 
 
 
@@ -42,7 +46,8 @@ export class SearchBar {
   {
     if (this.text != "")
     {
-      this.api.search(this.text,this.mindate,this.maxdate,this.sortselect,this.safeselect,this.is_hasgeo,this.is_ingallery,this.texttag);
+
+      this.api.search(this.text,this.mindate,this.maxdate,this.sortselect,this.safeselect,this.is_hasgeo,this.is_ingallery,this.texttag,this.imagelistv2);
     }
   }
 

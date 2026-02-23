@@ -1,8 +1,9 @@
-import {Component, inject } from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {FlickrService} from "../flickr-service";
 import {ImageItem} from "../image-item/image-item";
 import {Photo, PhotoSmall} from "../../PhotoModel";
 import {AsyncPipe} from "@angular/common";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'app-image-list',
@@ -14,6 +15,8 @@ import {AsyncPipe} from "@angular/common";
   styleUrl: './image-list.css',
 })
 export class ImageList {
+  @Input() imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
+
   protected api = inject(FlickrService);
 
   public v = 0;
@@ -25,7 +28,7 @@ export class ImageList {
 
   ngOnInit()
   {
-    this.api.imagelistv2.subscribe(value => {
+    this.imagelistv2.subscribe(value => {
       this.v += 1;
       //console.log(this.v);
 

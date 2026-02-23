@@ -15,8 +15,7 @@ export class FlickrService {
 
   private http = inject(HttpClient);
 
-  api_key = "5c1a5951a8a17c676482dea0f679850e";
-  public  imagelistv2 = new BehaviorSubject<PhotoSmall[]>([]);
+  api_key = "9bece75e0eea9e622a75fa8a0eb1e6a2";
 
   public size :[string,string][] = [["","url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o"],["petite","url_m,url_n"],["moyenne","url_z,url_c"],["grande","url_l"]];
 
@@ -25,8 +24,8 @@ export class FlickrService {
   public lastcall  :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {};
 
 
-
-  public search(value : string,mindate :string, maxdate:string,sort: string,safe : number, geo:boolean,in_gallery : boolean,tags : string){
+  public search(value : string,mindate :string, maxdate:string,sort: string,safe : number, geo:boolean,in_gallery : boolean,tags : string,
+                imagelistv2 : BehaviorSubject<PhotoSmall[]>){
 
 
       //https://serpapi.com/search.json?q=Apple&engine=google_images&ijn=0
@@ -74,17 +73,17 @@ export class FlickrService {
       }
       this.lastcall = params;
 
-      this.searchParams(params);
+      this.searchParams(params,imagelistv2);
   }
 
-    public searchChangePage()
+    public searchChangePage(imagelistv2 : BehaviorSubject<PhotoSmall[]>)
     {
         this.lastcall["page"] = this.page;
-        this.searchParams(this.lastcall);
+        this.searchParams(this.lastcall,imagelistv2);
     }
 
 
-    public searchParams(params : Record<string, string | number | boolean | readonly (string | number | boolean)[]>)
+    public searchParams(params : Record<string, string | number | boolean | readonly (string | number | boolean)[]>, imagelistv2 : BehaviorSubject<PhotoSmall[]>)
     {
         var res = this.http.get<ApiResponse>(
             'https://www.flickr.com/services/rest/'
@@ -104,7 +103,7 @@ export class FlickrService {
             console.log(imagelist);
 
             //this.imagelistv2.next(imagelist);
-            this.imagelistv2.next(imagelist);
+            imagelistv2.next(imagelist);
         });
     }
 
