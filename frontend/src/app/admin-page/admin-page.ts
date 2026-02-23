@@ -13,7 +13,7 @@ import {HomeButton} from "../home-button/home-button";
 })
 export class AdminPage {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(public authService: AuthService, private router: Router) { }
 
   ngOnInit() {
   }

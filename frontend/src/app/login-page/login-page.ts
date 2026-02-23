@@ -29,8 +29,17 @@ export class LoginPage {
     }
     if (this.authService.estConnecte())
     {
-      this.router.navigateByUrl('/admin');
+      console.log(this.authService.userInfo)
 
+      if (this.authService.userInfo?.isAdmin )
+      {
+        this.router.navigateByUrl('/admin');
+
+      }
+      else {
+        this.router.navigateByUrl('/user');
+
+      }
     }
   }
   get formControls() { return this.loginForm.controls; }
