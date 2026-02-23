@@ -4,10 +4,11 @@ import {SearchBar} from "./search-bar/search-bar";
 import {ImageList} from "./image-list/image-list";
 import {Overlay} from "./overlay/overlay";
 import {NextPage} from "./next-page/next-page";
+import {HomeButton} from "./home-button/home-button";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SearchBar, ImageList, Overlay, NextPage],
+    imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -1,6 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {FlickrService} from "../flickr-service";
 import {FormsModule} from "@angular/forms";
+import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-search-bar',
@@ -29,6 +30,7 @@ export class SearchBar {
   public sortselect :string = "";
   public sort :string[] = ["","date-posted-asc","date-posted-desc","date-taken-asc","date-taken-desc","interestingness-desc","interestingness-asc","relevance"];
 
+  constructor(private activateRoute: ActivatedRoute){}
 
 
 
@@ -42,5 +44,18 @@ export class SearchBar {
     {
       this.api.search(this.text,this.mindate,this.maxdate,this.sortselect,this.safeselect,this.is_hasgeo,this.is_ingallery,this.texttag);
     }
+  }
+
+  ngOnInit()
+  {
+    this.activateRoute.queryParamMap.subscribe(a => {
+      var t = a.get("search")
+      if (t != null)
+      {
+        this.text = t.toString();
+        this.search()
+      }
+
+    })
   }
 }
