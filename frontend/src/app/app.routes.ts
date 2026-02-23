@@ -5,14 +5,13 @@ import {SearchBar} from "./search-bar/search-bar";
 import {SearchPage} from "./search-page/search-page";
 import {AdminPage} from "./admin-page/admin-page";
 import {LoginPage} from "./login-page/login-page";
-
+import { AuthGuard } from './auth-guard';
 
 export const routes: Routes = [
 
     { path: '', component: HomePage },
-    //{ path: 'login', component: LoginPage},
-    { path: 'admin', component: AdminPage},
-    { path: 'user', component: UserPage},
+    { path: 'admin', component: AdminPage , canActivate: [AuthGuard] },
+    { path: 'user', component: UserPage , canActivate: [AuthGuard]},
     { path: 'login', component: LoginPage},
     { path: 'search', component: SearchPage},
 
