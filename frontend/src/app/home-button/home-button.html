@@ -1,16 +1,20 @@
-<div>
-    <!-- button to go in main page-->
-<a href="/">
-    <img src="vapeur.jpeg" height="30px" width="30px" alt="image" >
-</a>
-    <form ngNoForm action ="/search" method="GET">
-        <input type="text" id="search" name="search" placeholder="TYPE HERE!">
-        <input type="submit" value="search">
+<header class="steam-header">
+    <div class="nav-left">
+        <a href="/" class="logo">
+            <img src="vapeur.jpeg" alt="Home">
+            <span>Vapeur</span>
+        </a>
+    </div>
+
+    <form class="search-bar" action="/search" method="GET">
+        <input type="text" name="search" placeholder="Rechercher dans le store...">
+        <button type="submit">🔍</button>
     </form>
 
-    <!-- button to go in account page-->
-    <!-- button to go in account page-->
-    <a href="/login">
-        <img src="user.jpeg" height="30px" width="30px" alt="image" >
-    </a>
-</div>
+    <div class="nav-right">
+        <a href="/login" class="user-btn">
+            <img src="user.jpeg" alt="Compte">
+            <span>Compte</span>
+        </a>
+    </div>
+</header>

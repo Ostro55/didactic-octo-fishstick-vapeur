@@ -1,30 +1,41 @@
 .results-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem;
-    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #1b2838, #0f1621);
+    min-height: 100vh;
+    padding: 40px 5vw;
+    color: #c7d5e0;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
-.results-container h2 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    color: #333;
+.results-title {
+    font-size: 26px;
+    margin-bottom: 25px;
+    border-left: 4px solid #66c0f4;
+    padding-left: 14px;
+    color: #66c0f4;
 }
 
 .results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
 }
 
-app-image-item {
-    border-radius: 12px;
+.result-card {
+    background: linear-gradient(145deg, #1b2838, #16202d);
+    border-radius: 10px;
     overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: block;
+    transition: 0.25s;
+    box-shadow: 0 0 15px rgba(0,0,0,0.6);
 }
 
-app-image-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+.result-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 0 30px rgba(0,0,0,0.9);
+}
+
+/* Pour que <app-image-item> prenne toute la place */
+.result-card app-image-item {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
