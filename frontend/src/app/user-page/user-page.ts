@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import {HomeButton} from "../home-button/home-button";
 
 @Component({
   selector: 'app-user-page',
-  imports: [],
+  imports: [
+    HomeButton
+  ],
   templateUrl: './user-page.html',
   styleUrl: './user-page.css',
 })
