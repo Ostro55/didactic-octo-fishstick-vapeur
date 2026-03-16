@@ -11,7 +11,7 @@ public interface IGameService {
 
     Optional<Game> getById(Long id);
 
-    List<Game> getAllWithFilters(String name, Long minPrice, Long maxPrice, String filters);
+    List<Game> getAllWithFilters(String name, Long minPrice, Long maxPrice, String genre);
 
     Optional<Game> addGame(Game newGame);
 

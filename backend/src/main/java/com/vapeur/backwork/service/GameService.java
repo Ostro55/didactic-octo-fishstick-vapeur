@@ -27,16 +27,7 @@ public class GameService implements IGameService {
     @Override
     public List<Game> getAllWithFilters(String name, Long minPrice, Long maxPrice, String genre) {
         List<Game> toFilter = gameRepository.findAll();
-        var stream = toFilter.stream();
-        if (name != null)
-            stream = stream.filter(x -> x.getName().equalsIgnoreCase(name));
-        if (minPrice != null)
-            stream = stream.filter(x -> x.getPrice() >= minPrice);
-        if (maxPrice != null)
-            stream = stream.filter(x -> x.getPrice() <= maxPrice);
-        if (genre != null)
-            stream = stream.filter(x -> x.getGenre().contains(genre));
-        return stream.toList();
+        return GameFilters.apply(toFilter, name, minPrice, maxPrice, genre);
     }
 
     @Override

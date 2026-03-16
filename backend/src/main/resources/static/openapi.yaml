@@ -1,0 +1,150 @@
+openapi: 3.0.3
+info:
+  title: back-work API
+  version: 0.0.1-SNAPSHOT
+  description: |
+    Documentation OpenAPI generee a partir des controllers detectes dans le projet.
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /game/all:
+    get:
+      summary: Lister les jeux (avec filtres optionnels)
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filtrer par nom (egalite, insensitive case)
+        - name: genre
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/GameGenre"
+          description: Filtrer si le jeu contient ce genre
+        - name: minPrice
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+          description: Prix minimum inclus
+        - name: maxPrice
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+          description: Prix maximum inclus
+      responses:
+        "200":
+          description: Liste de jeux
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Game"
+
+  /game/save:
+    post:
+      summary: Creer un jeu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GameCreate"
+      responses:
+        "201":
+          description: Jeu cree
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "500":
+          description: Erreur interne
+
+  /game/{id}:
+    get:
+      summary: Recuperer un jeu par id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Jeu
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "500":
+          description: Erreur interne
+
+components:
+  schemas:
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        price:
+          type: integer
+          format: int64
+          nullable: true
+        genre:
+          type: array
+          items:
+            $ref: "#/components/schemas/GameGenre"
+          uniqueItems: true
+          nullable: true
+        makingTime:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - name
+
+    GameCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+          format: int64
+          nullable: true
+        genre:
+          type: array
+          items:
+            $ref: "#/components/schemas/GameGenre"
+          uniqueItems: true
+          nullable: true
+        makingTime:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - name
+
+    GameGenre:
+      type: string
+      enum:
+        - action
+        - romance
+        - thriller
+        - horror
+        - multiplayer
+        - singleplayer
+

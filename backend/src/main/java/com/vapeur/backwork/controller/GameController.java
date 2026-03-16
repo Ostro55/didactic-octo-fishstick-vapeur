@@ -18,10 +18,10 @@ public class GameController {
 
     @GetMapping("game/all")
     public ResponseEntity<List<Game>> getAll(
-            @RequestParam String name,
-            @RequestParam String genre,
-            @RequestParam Long minPrice,
-            @RequestParam Long maxPrice
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) Long minPrice,
+            @RequestParam(required = false) Long maxPrice
     ) {
         List<Game> allGames;
         if (name == null && genre == null && minPrice == null && maxPrice == null)
