@@ -22,11 +22,15 @@ public class Game {
     @NonNull
     private String name;
     private Long price;
+    private String description;
+    private Timestamp release_date;
+    private String img_url;
+    private String editor;
+    private String status; // Can be Pending or Approved
 
-    @ElementCollection(targetClass = GameGenre.class)
+    @ElementCollection(fetch = FetchType.EAGER, targetClass = GameGenre.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "game_genres", joinColumns = @JoinColumn(name = "game_id"))
     @Column(name = "genre", nullable = false)
     private Set<GameGenre> genre;
-    private Timestamp makingTime;
 }

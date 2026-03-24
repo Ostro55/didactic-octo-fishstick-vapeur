@@ -16,4 +16,9 @@ public interface IGameService {
     Optional<Game> addGame(Game newGame);
 
     Optional<Game> deleteGameById(Long id);
+
+    /**
+     * Purge all data related to games (games + join tables). Useful before schema changes.
+     */
+    void cleanGames();
 }

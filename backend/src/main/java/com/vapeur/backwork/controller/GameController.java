@@ -42,4 +42,10 @@ public class GameController {
         Optional<Game> game = gameService.getById(id);
         return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
+
+    @DeleteMapping("game/clean")
+    public ResponseEntity<Void> clean() {
+        gameService.cleanGames();
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -4,6 +4,7 @@ import com.vapeur.backwork.entity.Game;
 import com.vapeur.backwork.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,5 +42,14 @@ public class GameService implements IGameService {
         Optional<Game> game = gameRepository.findById(id);
         game.ifPresent(gameRepository::delete);
         return game;
+    }
+
+    @Override
+    @Transactional
+    public void cleanGames() {
+        // Order matters because of foreign keys.
+        gameRepository.deleteAllRecommendedGameLinks();
+        gameRepository.deleteAllGameGenres();
+        gameRepository.deleteAllGames();
     }
 }
