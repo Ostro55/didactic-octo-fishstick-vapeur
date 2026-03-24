@@ -1,9 +1,10 @@
 package com.vapeur.backwork.service;
 
 import com.vapeur.backwork.entity.Game;
+import com.vapeur.backwork.utils.GameGenre;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 
 final class GameFilters {
 
@@ -26,12 +27,15 @@ final class GameFilters {
             stream = stream.filter(g -> g.getPrice() != null && g.getPrice() <= maxPrice);
         }
         if (genreFilter != null) {
-            stream = stream.filter(g ->
-                    g.getGenre() != null
-                            && g.getGenre().stream()
-                            .filter(Objects::nonNull)
-                            .anyMatch(x -> x.equalsIgnoreCase(genreFilter))
-            );
+            final GameGenre genreEnum;
+            try {
+                // Enum constants are lowercase in this codebase.
+                genreEnum = GameGenre.valueOf(genreFilter.toLowerCase(Locale.ROOT));
+            } catch (IllegalArgumentException ex) {
+                return List.of();
+            }
+
+            stream = stream.filter(g -> g.getGenre() != null && g.getGenre().contains(genreEnum));
         }
 
         return stream.toList();
@@ -43,4 +47,3 @@ final class GameFilters {
         return t.isEmpty() ? null : t;
     }
 }
-

@@ -1,10 +1,7 @@
 package com.vapeur.backwork.entity;
 
 import com.vapeur.backwork.utils.GameGenre;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -15,6 +12,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name = "games")
 public class Game {
 
     @Id
@@ -24,6 +22,11 @@ public class Game {
     @NonNull
     private String name;
     private Long price;
-    private Set<String> genre;
+
+    @ElementCollection(targetClass = GameGenre.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "game_genres", joinColumns = @JoinColumn(name = "game_id"))
+    @Column(name = "genre", nullable = false)
+    private Set<GameGenre> genre;
     private Timestamp makingTime;
 }

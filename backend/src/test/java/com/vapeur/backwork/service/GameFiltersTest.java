@@ -1,6 +1,7 @@
 package com.vapeur.backwork.service;
 
 import com.vapeur.backwork.entity.Game;
+import com.vapeur.backwork.utils.GameGenre;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -47,11 +48,11 @@ class GameFiltersTest {
     void apply_genreFilter_isCaseInsensitive() {
         Game a = new Game();
         a.setName("A");
-        a.setGenre(Set.of("action", "horror"));
+        a.setGenre(Set.of(GameGenre.action, GameGenre.horror));
 
         Game b = new Game();
         b.setName("B");
-        b.setGenre(Set.of("romance"));
+        b.setGenre(Set.of(GameGenre.romance));
 
         List<Game> out = GameFilters.apply(List.of(a, b), null, null, null, "AcTiOn");
         assertEquals(List.of(a), out);
@@ -62,10 +63,19 @@ class GameFiltersTest {
         Game a = new Game();
         a.setName("A");
         a.setPrice(10L);
-        a.setGenre(Set.of("action"));
+        a.setGenre(Set.of(GameGenre.action));
 
         List<Game> out = GameFilters.apply(List.of(a), "   ", null, null, " ");
         assertEquals(List.of(a), out);
     }
-}
 
+    @Test
+    void apply_invalidGenre_returnsEmpty() {
+        Game a = new Game();
+        a.setName("A");
+        a.setGenre(Set.of(GameGenre.action));
+
+        List<Game> out = GameFilters.apply(List.of(a), null, null, null, "not-a-genre");
+        assertEquals(List.of(), out);
+    }
+}
