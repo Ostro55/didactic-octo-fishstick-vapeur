@@ -89,6 +89,114 @@ paths:
         "500":
           description: Erreur interne
 
+  /game/clean:
+    delete:
+      summary: Purger les jeux (games + tables de jointure)
+      responses:
+        "204":
+          description: Purge effectuee
+
+  /user/all:
+    get:
+      summary: Lister les utilisateurs
+      responses:
+        "200":
+          description: Liste d'utilisateurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+  /user/save:
+    post:
+      summary: Creer un utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+      responses:
+        "201":
+          description: Utilisateur cree
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          description: Erreur interne
+
+  /user/{id}:
+    get:
+      summary: Recuperer un utilisateur par id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          description: Erreur interne
+    put:
+      summary: Mettre a jour un utilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Utilisateur mis a jour
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          description: Erreur interne
+    delete:
+      summary: Supprimer un utilisateur par id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Utilisateur supprime
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          description: Erreur interne
+
+  /user/clean:
+    delete:
+      summary: Purger les utilisateurs (users + table de jointure)
+      responses:
+        "204":
+          description: Purge effectuee
+
 components:
   schemas:
     Game:
@@ -148,3 +256,65 @@ components:
         - multiplayer
         - singleplayer
 
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        isAdmin:
+          type: boolean
+        recommendedGames:
+          type: array
+          items:
+            $ref: "#/components/schemas/Game"
+          uniqueItems: true
+          nullable: true
+      required:
+        - username
+        - email
+        - isAdmin
+
+    UserCreate:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        isAdmin:
+          type: boolean
+        recommendedGames:
+          type: array
+          items:
+            $ref: "#/components/schemas/Game"
+          uniqueItems: true
+          nullable: true
+      required:
+        - username
+        - email
+        - isAdmin
+
+    UserUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        isAdmin:
+          type: boolean
+        recommendedGames:
+          type: array
+          items:
+            $ref: "#/components/schemas/Game"
+          uniqueItems: true
+          nullable: true
+      required:
+        - username
+        - email
+        - isAdmin
