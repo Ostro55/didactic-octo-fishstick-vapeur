@@ -1,0 +1,44 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    color: #dfe7f1;
+    background:
+            radial-gradient(circle at top, rgba(55, 88, 125, 0.22), transparent 35%),
+            linear-gradient(180deg, #101923 0%, #0b1118 45%, #081018 100%);
+}
+
+:host {
+    --steam-panel: rgba(16, 24, 35, 0.86);
+    --steam-panel-border: rgba(130, 170, 210, 0.16);
+    --steam-accent: #66c0f4;
+    --steam-accent-strong: #3f8fd8;
+}
+
+app-home-button {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+app-overlay {
+    display: block;
+}
+
+app-image-list {
+    display: block;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 22px 20px 40px;
+}
+
+/* Steam-like content panel feel for the main page */
+app-image-list {
+    background: linear-gradient(180deg, rgba(16, 24, 35, 0.55), rgba(10, 16, 24, 0.78));
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 18px;
+    box-shadow:
+            0 18px 50px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+}

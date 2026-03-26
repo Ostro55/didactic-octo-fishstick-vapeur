@@ -1,20 +1,15 @@
-<header class="steam-header">
-    <div class="nav-left">
-        <a href="/" class="logo">
-            <img src="vapeur.jpeg" alt="Home">
-            <span>Vapeur</span>
-        </a>
-    </div>
+<div class="steam-navbar">
+    <a class="brand-link" href="/" aria-label="Go to home page">
+        <img src="vapeur.jpeg" class="brand-icon" alt="Home" />
+        <span class="brand-text">Vapeur</span>
+    </a>
 
-    <form class="search-bar" action="/search" method="GET">
-        <input type="text" name="search" placeholder="Rechercher dans le store...">
-        <button type="submit">🔍</button>
+    <form class="search-form" ngNoForm action="/search" method="GET">
+        <input type="text" id="search" name="search" placeholder="Search the store" />
+        <button type="submit">Search</button>
     </form>
 
-    <div class="nav-right">
-        <a href="/login" class="user-btn">
-            <img src="user.jpeg" alt="Compte">
-            <span>Compte</span>
-        </a>
-    </div>
-</header>
+    <a class="account-link" href="/login" aria-label="Go to account page">
+        <img src="user.jpeg" class="account-icon" alt="Account" />
+    </a>
+</div>
