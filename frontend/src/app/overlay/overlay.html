@@ -25,7 +25,6 @@
 
 <div class="overlay" [style.display]="overlay.display">
     <button (click)="overlay.hide()">X</button>
-    <img  [src]="overlay.photo.url" [width]="overlay.photo.width" [height]="overlay.photo.height" alt="not loaded" [style.display]="overlay.display"/>
 
     @if( (overlay.photo.image | async) && title != "")
     {

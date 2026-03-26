@@ -2,7 +2,7 @@ import {ApplicationConfig, inject, Injectable, signal, Signal} from '@angular/co
 import {BehaviorSubject} from "rxjs";
 import {HttpClient, HttpParams, provideHttpClient, withFetch} from "@angular/common/http";
 import {scheduleReadableStreamLike} from "rxjs/internal/scheduled/scheduleReadableStreamLike";
-import {ApiResponse, Photo, PhotoSmall} from "../PhotoModel";
+import {ApiResponse, Photo, PhotoSmall, PhotosPage} from "../PhotoModel";
 import {FlickrPhotoResponse, PhotoInfo} from "../PhotoURL";
 
 
@@ -12,6 +12,7 @@ import {FlickrPhotoResponse, PhotoInfo} from "../PhotoURL";
 
 export class FlickrService {
 
+    url = "http://localhost:8080";
 
   private http = inject(HttpClient);
 
@@ -35,6 +36,8 @@ export class FlickrService {
             console.log('The image is ' + buffer + ' bytes large');
           });
        */
+      var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {}
+      /*
       var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {
         api_key: this.api_key,
 
@@ -71,6 +74,7 @@ export class FlickrService {
       {
           params["tags"] = tags;
       }
+      */
       this.lastcall = params;
 
       this.searchParams(params,imagelistv2);
@@ -85,18 +89,23 @@ export class FlickrService {
 
     public searchParams(params : Record<string, string | number | boolean | readonly (string | number | boolean)[]>, imagelistv2 : BehaviorSubject<PhotoSmall[]>)
     {
-        var res = this.http.get<ApiResponse>(
-            'https://www.flickr.com/services/rest/'
+        var res = this.http.get<Photo[]>(
+            '/game/all'
             , {
                 params : params,
                 responseType: 'json'
             }, ).subscribe((buffer) => {
             console.log(buffer);
-            var imagelist: PhotoSmall[] = buffer.photos.photo.map(a => {
+            var imagelist: PhotoSmall[] = buffer.map(a => {
                 var v =  this.find_url(a);
 
-                v.title = a.title;
+                v.name = a.name;
                 v.id = a.id;
+                v.genre = a.genre;
+                v.price = a.price;
+                v.description = a.description == null ? "" : a.description;
+                v.editor = a.editor == null ? "" : a.editor;
+                v.img_url = a.img_url == null ? "" : a.img_url;
 
                 return v;
             });
@@ -111,29 +120,10 @@ export class FlickrService {
   {
     var v =  new PhotoSmall();
 
-    let l = ["sq", "t", "s", "q", ,"o"];
-    for (var i of l)
-    {
-      // @ts-ignore
-      if(photo["url_"+i] != undefined)
-      {
-        // @ts-ignore
-        v.url = photo["url_"+i];
-        // @ts-ignore
-        v.height = photo["height_" +i];
-        // @ts-ignore
-        v.width = photo["width_" + i];
-      }
-      v.urlthumb =photo["url_t"];
-      v.heightthumb = photo["height_t"];
-      v.widththumb = photo["width_t"];
-
-    }
-
     return v;
   }
 
-  public get_photo(id : string, data : BehaviorSubject<FlickrPhotoResponse  | undefined>)
+  public get_game(id : number, data : BehaviorSubject<FlickrPhotoResponse  | undefined>)
   {
     //https://www.flickr.com/services/rest/?
     // method=flickr.photos.getInfo&
@@ -145,15 +135,13 @@ export class FlickrService {
     // api_sig=89dc8eee7392a8133e416994a773f9f0
     //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
     var res = this.http.get<FlickrPhotoResponse>(
-        'https://www.flickr.com/services/rest/'
+        '/game/' + id
         , {
           params : {
-            api_key: this.api_key,
 
             method : "flickr.photos.getInfo",
             format:"json",
             nojsoncallback: 1,
-            photo_id : id,
           },
           responseType: 'json'
         }, ).subscribe((buffer) => {

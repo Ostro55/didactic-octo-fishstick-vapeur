@@ -1,16 +1,15 @@
-<div>
-    <!-- button to go in main page-->
-<a href="/">
-    <img src="vapeur.jpeg" height="30px" width="30px" alt="image" >
-</a>
-    <form ngNoForm action ="/search" method="GET">
-        <input type="text" id="search" name="search" placeholder="TYPE HERE!">
-        <input type="submit" value="search">
+<div class="steam-navbar">
+    <a class="brand-link" href="/" aria-label="Go to home page">
+        <img src="vapeur.jpeg" class="brand-icon" alt="Home" />
+        <span class="brand-text">Vapeur</span>
+    </a>
+
+    <form class="search-form" ngNoForm action="/search" method="GET">
+        <input type="text" id="search" name="search" placeholder="Search the store" />
+        <button type="submit">Search</button>
     </form>
 
-    <!-- button to go in account page-->
-    <!-- button to go in account page-->
-    <a href="/login">
-        <img src="user.jpeg" height="30px" width="30px" alt="image" >
+    <a class="account-link" href="/login" aria-label="Go to account page">
+        <img src="user.jpeg" class="account-icon" alt="Account" />
     </a>
 </div>

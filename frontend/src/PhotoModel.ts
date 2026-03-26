@@ -2,55 +2,15 @@ import {BehaviorSubject} from "rxjs";
 import {FlickrPhotoResponse, PhotoInfo} from "./PhotoURL";
 
 export interface Photo {
-    id: string;
-    owner: string;
-    secret: string;
-    server: string;
-    farm: number;
-    title: string;
-    ispublic: number;
-    isfriend: number;
-    isfamily: number;
-
-    url_sq: string;
-    height_sq: number;
-    width_sq: number;
-
-    url_t: string;
-    height_t: number;
-    width_t: number;
-
-    url_s: string;
-    height_s: number;
-    width_s: number;
-
-    url_q: string;
-    height_q: number;
-    width_q: number;
-
-    url_m: string;
-    height_m: number;
-    width_m: number;
-
-    url_n: string;
-    height_n: number;
-    width_n: number;
-
-    url_z: string;
-    height_z: number;
-    width_z: number;
-
-    url_c: string;
-    height_c: number;
-    width_c: number;
-
-    url_l: string;
-    height_l: number;
-    width_l: number;
-
-    url_o: string;
-    height_o: number;
-    width_o: number;
+    description: string | null;
+    editor: string | null;
+    genre: string[];
+    id: number;
+    img_url: string | null;
+    name: string;
+    price: number;
+    release_date: string | null;
+    status: string | null;
 }
 
 export interface PhotosPage {
@@ -67,36 +27,44 @@ export interface ApiResponse {
 }
 
 export class PhotoSmall {
-    public id: string ="";
-    public title: string = "";
-    public url: string = ""
-    public image: BehaviorSubject<FlickrPhotoResponse  | undefined> | undefined = new BehaviorSubject<FlickrPhotoResponse | undefined>( undefined);
-    public height: number =0;
-    public width: number =0;
+    description: string = "" ;
+    editor: string = "";
+    genre: string[] = [];
+    id: number = -1;
+    img_url: string  = "";
+    name: string = "";
+    price: number = 0;
+    release_date: string = "";
+    status: string = " ";
+    makingTime: string = "2026-03-26T14:06:44.063Z";
+    public image: BehaviorSubject<FlickrPhotoResponse  | undefined> = new BehaviorSubject<FlickrPhotoResponse | undefined>( undefined);
 
-    public urlthumb: string = ""
-    public heightthumb: number =0;
-    public widththumb: number =0;
 
-    public static PhotoSmall2(urlthumb: string)
+    public static PhotoSmall2()
     {
         let p = new PhotoSmall();
-        p.urlthumb = urlthumb;
-        p.heightthumb = 10;
-        p.widththumb = 10;
-        p.image = undefined
+        p.id =- -1;
+        p.name = "";
+        p.price = 0;
+        p.genre = [];
+        p.makingTime = "2026-03-26T14:06:44.063Z";
+
         return p;
     }
-    public PhotoSmall(id:string,title:string,url :string,height:number,width:number,urlthumb :string,heightthumb:number,widththumb:number)
-    {
+
+    public PhotoSmall(
+        id: number,
+        name: string,
+        price: number,
+        genre: string[],
+        makingTime: string
+    ) {
         this.id = id;
-        this.title = title;
-        this.url = url;
-        this.width = width;
-        this.height = height;
-        this.urlthumb = urlthumb;
-        this.widththumb=widththumb;
-        this.heightthumb = heightthumb;
+        this.name = name;
+        this.price = price;
+        this.genre = genre;
+        this.makingTime = makingTime;
+        return this;
     }
 }
 
