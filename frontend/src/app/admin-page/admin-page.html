@@ -1,14 +1,36 @@
 <app-home-button ></app-home-button>
 
-<div style="text-align:center">
-    <h1>
-        Bienvenue super administrateur!
-    </h1>
-    <p> your name is {{this.authService.userInfo?.email}}</p>
-    <p>
-        <button (click)="seDeconnecter()">
+<div class="admin-container">
+
+    <div class="admin-card header-card">
+        <h1>🎮 Super Administrateur</h1>
+        <p class="email">
+            Connecté en tant que <span>{{ this.authService.userInfo?.email }}</span>
+        </p>
+
+        <button class="logout-btn" (click)="seDeconnecter()">
             Se déconnecter
         </button>
-    </p>
-    <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+    </div>
+
+    <div class="admin-grid">
+
+        <div class="admin-card">
+            <h2>🚫 Bannir un utilisateur</h2>
+            <form (ngSubmit)="ban($event)">
+                <input type="text" id="userid" name="userid" placeholder="ID utilisateur à bannir">
+                <button type="submit" class="danger-btn">Bannir</button>
+            </form>
+        </div>
+
+        <div class="admin-card">
+            <h2>✅ Débannir un utilisateur</h2>
+            <form (ngSubmit)="unban($event)">
+                <input type="text" id="userid" name="userid" placeholder="ID utilisateur à débannir">
+                <button type="submit" class="success-btn">Débannir</button>
+            </form>
+        </div>
+
+    </div>
+
 </div>

@@ -1,6 +1,113 @@
-button{
-    background: rgb(1, 29, 51);
-    border-color: transparent;
-    color: #fff;
+.admin-container {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #1b2838, #0f1621);
+    color: #c7d5e0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header-card {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.admin-card {
+    background: linear-gradient(145deg, #1b2838, #16202d);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    transition: 0.25s;
+}
+
+.admin-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 35px rgba(0,0,0,0.9);
+}
+
+.admin-card h1,
+.admin-card h2 {
+    margin: 0 0 12px;
+}
+
+.email {
+    color: #9db2c7;
+    margin-bottom: 18px;
+}
+
+.email span {
+    color: #66c0f4;
+}
+
+.admin-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.admin-card input {
+    background: #2a475e;
+    border: 1px solid transparent;
+    padding: 12px;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.admin-card input:focus {
+    outline: none;
+    border: 1px solid #66c0f4;
+    background: #1b3b52;
+}
+
+.logout-btn {
+    background: linear-gradient(135deg, #a83232, #6b1d1d);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    padding: 12px 26px;
     cursor: pointer;
+    font-weight: bold;
+    transition: 0.25s;
+}
+
+.logout-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255,80,80,0.5);
+}
+
+.danger-btn {
+    background: linear-gradient(135deg, #c0392b, #922b21);
+}
+
+.success-btn {
+    background: linear-gradient(135deg, #27ae60, #1e8449);
+}
+
+.danger-btn,
+.success-btn {
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.danger-btn:hover,
+.success-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 12px rgba(102,192,244,0.4);
 }
