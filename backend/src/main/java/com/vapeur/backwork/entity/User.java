@@ -29,11 +29,21 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_recommended_games",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "game_id")
     )
     private Set<Game> recommendedGames = new HashSet<>();
+
+    @com.fasterxml.jackson.annotation.JsonProperty("isAdmin")
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    @com.fasterxml.jackson.annotation.JsonProperty("isAdmin")
+    public void setAdmin(boolean admin) {
+        this.isAdmin = admin;
+    }
 }
