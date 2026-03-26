@@ -1,53 +1,110 @@
-.search-container {
+.steam-search-container {
+    background: linear-gradient(180deg, #1b2838, #0f1621);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    margin-bottom: 35px;
+    color: #c7d5e0;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.search-title {
+    font-size: 22px;
+    margin-bottom: 25px;
+    color: #66c0f4;
+    border-left: 4px solid #66c0f4;
+    padding-left: 14px;
+}
+
+.search-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+}
+
+.search-group {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin: 0 auto;
-    padding: 1rem;
-    font-family: Arial, sans-serif;
+    gap: 6px;
 }
 
-.search-row {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
+.search-group.full {
+    grid-column: span 2;
 }
 
-.search-input {
-    flex: 1;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
+.search-group label {
+    font-size: 13px;
+    color: #9db2c7;
 }
 
-.search-btn {
-    padding: 0.5rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    background-color: #007bff;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.search-btn:hover {
-    background-color: #0056b3;
-}
-
-.date-input,
-.select-input {
-    padding: 0.4rem 0.8rem;
+.steam-input {
+    background: #2a475e;
+    border: 1px solid transparent;
     border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 0.95rem;
+    padding: 11px 12px;
+    color: white;
+    font-size: 14px;
+    transition: 0.25s;
 }
 
-.checkbox-row label {
+.steam-input:focus {
+    outline: none;
+    border: 1px solid #66c0f4;
+    background: #1b3b52;
+}
+
+.steam-search-btn {
+    background: linear-gradient(135deg, #66c0f4, #417a9b);
+    border: none;
+    border-radius: 6px;
+    color: #0f1621;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 11px 22px;
+    margin-left: 10px;
+    transition: 0.25s;
+}
+
+.steam-search-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(102,192,244,0.7);
+}
+
+/* Checkbox premium */
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 25px;
+}
+
+.steam-checkbox {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.95rem;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.steam-checkbox input {
+    display: none;
+}
+
+.steam-checkbox span {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: #2a475e;
+    position: relative;
+}
+
+.steam-checkbox input:checked + span {
+    background: #66c0f4;
+}
+
+.steam-checkbox input:checked + span::after {
+    content: "✔";
+    position: absolute;
+    font-size: 12px;
+    color: #0f1621;
+    left: 3px;
+    top: 1px;
 }
