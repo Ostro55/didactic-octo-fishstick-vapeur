@@ -30,11 +30,15 @@ jobs:
 
     - name: Tests backend
       working-directory: backend
-      run: ./mvn -B verify --no-transfer-progress
+      run: |
+        chmod +x mvnw
+        ./mvnw -B verify --no-transfer-progress
 
     - name: Tests api middleware
       working-directory: api-middleware
-      run: ./mvn -B verify --no-transfer-progress
+      run: |
+        chmod +x mvnw
+        ./mvnw -B verify --no-transfer-progress
 
     - name: Upload rapports JaCoCo
       if: always()
