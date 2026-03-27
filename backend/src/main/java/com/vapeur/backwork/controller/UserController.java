@@ -16,41 +16,41 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("user/all")
+    @GetMapping("users")
     public ResponseEntity<List<User>> getAll() {
         List<User> allUsers = userService.getAll();
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
-    @PostMapping("user/save")
+    @PostMapping("users")
     public ResponseEntity<User> save(@RequestBody User newUser) {
         Optional<User> user = userService.addUser(newUser);
         return user.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("users/{id}")
     public ResponseEntity<User> getById(@PathVariable("id") Long id) {
         Optional<User> user = userService.getById(id);
         return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @PutMapping("user/{id}")
+    @PutMapping("users/{id}")
     public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestBody User updatedUser) {
         Optional<User> user = userService.updateUser(id, updatedUser);
         return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @DeleteMapping("user/{id}")
+    @DeleteMapping("users/{id}")
     public ResponseEntity<User> deleteById(@PathVariable("id") Long id) {
         Optional<User> user = userService.deleteUserById(id);
         return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @DeleteMapping("user/clean")
+    @DeleteMapping("users")
     public ResponseEntity<Void> clean() {
         userService.cleanUsers();
         return ResponseEntity.noContent().build();

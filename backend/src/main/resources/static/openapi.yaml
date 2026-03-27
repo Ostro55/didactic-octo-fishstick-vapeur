@@ -8,7 +8,7 @@ servers:
   - url: http://localhost:8080
 
 paths:
-  /game/all:
+  /games:
     get:
       summary: Lister les jeux (avec filtres optionnels)
       parameters:
@@ -49,8 +49,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Game"
-
-  /game/save:
     post:
       summary: Creer un jeu
       requestBody:
@@ -68,8 +66,13 @@ paths:
                 $ref: "#/components/schemas/Game"
         "500":
           description: Erreur interne
+    delete:
+      summary: Purger les jeux (games + tables de jointure)
+      responses:
+        "204":
+          description: Purge effectuee
 
-  /game/{id}:
+  /games/{id}:
     get:
       summary: Recuperer un jeu par id
       parameters:
@@ -89,14 +92,7 @@ paths:
         "500":
           description: Erreur interne
 
-  /game/clean:
-    delete:
-      summary: Purger les jeux (games + tables de jointure)
-      responses:
-        "204":
-          description: Purge effectuee
-
-  /user/all:
+  /users:
     get:
       summary: Lister les utilisateurs
       responses:
@@ -108,8 +104,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/User"
-
-  /user/save:
     post:
       summary: Creer un utilisateur
       requestBody:
@@ -127,8 +121,13 @@ paths:
                 $ref: "#/components/schemas/User"
         "500":
           description: Erreur interne
+    delete:
+      summary: Purger les utilisateurs (users + table de jointure)
+      responses:
+        "204":
+          description: Purge effectuee
 
-  /user/{id}:
+  /users/{id}:
     get:
       summary: Recuperer un utilisateur par id
       parameters:
@@ -189,13 +188,6 @@ paths:
                 $ref: "#/components/schemas/User"
         "500":
           description: Erreur interne
-
-  /user/clean:
-    delete:
-      summary: Purger les utilisateurs (users + table de jointure)
-      responses:
-        "204":
-          description: Purge effectuee
 
 components:
   schemas:

@@ -29,15 +29,15 @@ class UserControllerTest {
 
     @BeforeEach
     void cleanDb() throws Exception {
-        mvc.perform(delete("/user/clean"))
+        mvc.perform(delete("/users"))
                 .andExpect(status().isNoContent());
-        mvc.perform(delete("/game/clean"))
+        mvc.perform(delete("/games"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void save_thenGetAll_thenGetById() throws Exception {
-        MvcResult create = mvc.perform(post("/user/save")
+        MvcResult create = mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson("alice", "alice@example.com", false)))
                 .andExpect(status().isCreated())
@@ -48,7 +48,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.recommendedGames", hasSize(0)))
                 .andReturn();
 
-        mvc.perform(get("/user/all"))
+        mvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].username").value("alice"))
@@ -57,14 +57,14 @@ class UserControllerTest {
         Number userIdNum = com.jayway.jsonpath.JsonPath.read(create.getResponse().getContentAsString(), "$.id");
         long userId = userIdNum.longValue();
 
-        mvc.perform(get("/user/" + userId))
+        mvc.perform(get("/users/" + userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("alice"));
     }
 
     @Test
     void update_thenDelete() throws Exception {
-        MvcResult create = mvc.perform(post("/user/save")
+        MvcResult create = mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson("bob", "bob@example.com", false)))
                 .andExpect(status().isCreated())
@@ -73,18 +73,18 @@ class UserControllerTest {
         Number userIdNum = com.jayway.jsonpath.JsonPath.read(create.getResponse().getContentAsString(), "$.id");
         long userId = userIdNum.longValue();
 
-        mvc.perform(put("/user/" + userId)
+        mvc.perform(put("/users/" + userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson("bob", "bob2@example.com", true)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("bob2@example.com"))
                 .andExpect(jsonPath("$.isAdmin").value(true));
 
-        mvc.perform(delete("/user/" + userId))
+        mvc.perform(delete("/users/" + userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("bob"));
 
-        mvc.perform(get("/user/all"))
+        mvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }

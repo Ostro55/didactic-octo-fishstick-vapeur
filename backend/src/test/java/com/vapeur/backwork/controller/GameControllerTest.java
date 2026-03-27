@@ -30,7 +30,7 @@ class GameControllerTest {
 
     @BeforeEach
     void cleanDb() throws Exception {
-        mvc.perform(delete("/game/clean"))
+        mvc.perform(delete("/games"))
                 .andExpect(status().isNoContent());
     }
 
@@ -38,7 +38,7 @@ class GameControllerTest {
     void save_thenGetAll_roundTripGenreEnumSet() throws Exception {
         String payload = gameJson("Doom", 10, GameGenre.action.name(), GameGenre.horror.name());
 
-        mvc.perform(post("/game/save")
+        mvc.perform(post("/games")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payload))
                 .andExpect(status().isCreated())
@@ -47,7 +47,7 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.price").value(10))
                 .andExpect(jsonPath("$.genre", containsInAnyOrder("action", "horror")));
 
-        mvc.perform(get("/game/all"))
+        mvc.perform(get("/games"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value("Doom"))
@@ -56,17 +56,17 @@ class GameControllerTest {
 
     @Test
     void getAll_withGenreFilter_isCaseInsensitive() throws Exception {
-        mvc.perform(post("/game/save")
+        mvc.perform(post("/games")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gameJson("A", 1, GameGenre.action.name())))
                 .andExpect(status().isCreated());
 
-        mvc.perform(post("/game/save")
+        mvc.perform(post("/games")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gameJson("B", 1, GameGenre.romance.name())))
                 .andExpect(status().isCreated());
 
-        mvc.perform(get("/game/all").param("genre", "AcTiOn"))
+        mvc.perform(get("/games").param("genre", "AcTiOn"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value("A"));
@@ -74,27 +74,27 @@ class GameControllerTest {
 
     @Test
     void getAll_withInvalidGenre_returnsEmptyArray() throws Exception {
-        mvc.perform(post("/game/save")
+        mvc.perform(post("/games")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gameJson("A", 1, GameGenre.action.name())))
                 .andExpect(status().isCreated());
 
-        mvc.perform(get("/game/all").param("genre", "not-a-genre"))
+        mvc.perform(get("/games").param("genre", "not-a-genre"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
 
     @Test
     void clean_clearsGames() throws Exception {
-        mvc.perform(post("/game/save")
+        mvc.perform(post("/games")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gameJson("A", 1, GameGenre.action.name())))
                 .andExpect(status().isCreated());
 
-        mvc.perform(delete("/game/clean"))
+        mvc.perform(delete("/games"))
                 .andExpect(status().isNoContent());
 
-        mvc.perform(get("/game/all"))
+        mvc.perform(get("/games"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }

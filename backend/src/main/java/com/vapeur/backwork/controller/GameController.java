@@ -16,7 +16,7 @@ public class GameController {
 
     private final GameService gameService;
 
-    @GetMapping("game/all")
+    @GetMapping("games")
     public ResponseEntity<List<Game>> getAll(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String genre,
@@ -31,19 +31,19 @@ public class GameController {
         return new ResponseEntity<>(allGames, HttpStatus.OK);
     }
 
-    @PostMapping("game/save")
+    @PostMapping("games")
     public ResponseEntity<Game> save(@RequestBody Game newGame) {
         Optional<Game> game = gameService.addGame(newGame);
         return game.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @GetMapping("game/{id}")
+    @GetMapping("games/{id}")
     public ResponseEntity<Game> getbyId(@PathVariable("id") Long id) {
         Optional<Game> game = gameService.getById(id);
         return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @DeleteMapping("game/clean")
+    @DeleteMapping("games")
     public ResponseEntity<Void> clean() {
         gameService.cleanGames();
         return ResponseEntity.noContent().build();
