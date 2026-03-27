@@ -92,6 +92,7 @@ class UserControllerTest {
     private static String userJson(String username, String email, boolean isAdmin) {
         return "{"
                 + "\"username\":" + jsonString(username)
+                + ",\"password\":" + jsonString("pw")
                 + ",\"email\":" + jsonString(email)
                 + ",\"isAdmin\":" + isAdmin
                 + ",\"recommendedGames\":[]"

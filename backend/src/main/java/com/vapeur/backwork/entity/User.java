@@ -22,6 +22,10 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @NonNull
+    @Column(nullable = false)
+    private String password;
+
     @Column(nullable = false)
     private boolean isAdmin;
 
