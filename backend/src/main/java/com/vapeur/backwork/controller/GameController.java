@@ -37,6 +37,13 @@ public class GameController {
         return game.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
+    @PostMapping("games/save")
+    public ResponseEntity<Game> saveWithUser(@RequestParam("userId") Long userId, @RequestBody Game newGame) {
+        Optional<Game> game = gameService.addGame(newGame, userId);
+        if (game.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(game.get(), HttpStatus.CREATED);
+    }
+
     @GetMapping("games/{id}")
     public ResponseEntity<Game> getbyId(@PathVariable("id") Long id) {
         Optional<Game> game = gameService.getById(id);

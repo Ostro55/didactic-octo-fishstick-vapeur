@@ -15,6 +15,12 @@ public interface IGameService {
 
     Optional<Game> addGame(Game newGame);
 
+    /**
+     * Create a game with a status derived from the calling user.
+     * Admin users accept immediately, others go to pending.
+     */
+    Optional<Game> addGame(Game newGame, Long userId);
+
     Optional<Game> deleteGameById(Long id);
 
     /**

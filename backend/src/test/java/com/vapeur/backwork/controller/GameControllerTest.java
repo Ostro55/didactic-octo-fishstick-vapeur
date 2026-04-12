@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
@@ -31,6 +32,8 @@ class GameControllerTest {
     @BeforeEach
     void cleanDb() throws Exception {
         mvc.perform(delete("/games"))
+                .andExpect(status().isNoContent());
+        mvc.perform(delete("/users"))
                 .andExpect(status().isNoContent());
     }
 
@@ -97,6 +100,57 @@ class GameControllerTest {
         mvc.perform(get("/games"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void saveWithUser_admin_setsAccepted() throws Exception {
+        long adminId = createUser("admin", "admin@example.com", true);
+
+        mvc.perform(post("/games/save").param("userId", String.valueOf(adminId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gameJson("Doom", 10, GameGenre.action.name())))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value("accepted"));
+    }
+
+    @Test
+    void saveWithUser_nonAdmin_setsPending() throws Exception {
+        long userId = createUser("user", "user@example.com", false);
+
+        mvc.perform(post("/games/save").param("userId", String.valueOf(userId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gameJson("Hades", 10, GameGenre.action.name())))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value("pending"));
+    }
+
+    @Test
+    void saveWithUser_unknownUser_returns404() throws Exception {
+        mvc.perform(post("/games/save").param("userId", "999999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gameJson("Celeste", 10, GameGenre.action.name())))
+                .andExpect(status().isNotFound());
+    }
+
+    private long createUser(String username, String email, boolean isAdmin) throws Exception {
+        MvcResult create = mvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson(username, email, isAdmin)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Number userIdNum = com.jayway.jsonpath.JsonPath.read(create.getResponse().getContentAsString(), "$.id");
+        return userIdNum.longValue();
+    }
+
+    private static String userJson(String username, String email, boolean isAdmin) {
+        return "{"
+                + "\"username\":" + jsonString(username)
+                + ",\"password\":" + jsonString("pw")
+                + ",\"email\":" + jsonString(email)
+                + ",\"isAdmin\":" + isAdmin
+                + ",\"recommendedGames\":[]"
+                + "}";
     }
 
     private static String gameJson(String name, long price, String... genres) {
