@@ -10,7 +10,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
     tags: [ "v*.*.*"]
   pull_request:
     branches: [ "main" ]
