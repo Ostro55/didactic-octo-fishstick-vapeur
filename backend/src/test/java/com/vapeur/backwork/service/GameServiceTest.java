@@ -1,5 +1,6 @@
 package com.vapeur.backwork.service;
 
+import com.vapeur.backwork.audit.AuditEventPublisher;
 import com.vapeur.backwork.entity.Game;
 import com.vapeur.backwork.entity.User;
 import com.vapeur.backwork.repository.GameRepository;
@@ -25,6 +26,9 @@ class GameServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    AuditEventPublisher auditEventPublisher;
+
     @InjectMocks
     GameService gameService;
 
@@ -42,6 +46,7 @@ class GameServiceTest {
         ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
         verify(gameRepository).save(captor.capture());
         assertEquals("accepted", captor.getValue().getStatus());
+        verify(auditEventPublisher).publish(any());
     }
 
     @Test
@@ -58,6 +63,7 @@ class GameServiceTest {
         ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
         verify(gameRepository).save(captor.capture());
         assertEquals("pending", captor.getValue().getStatus());
+        verify(auditEventPublisher).publish(any());
     }
 
     @Test
@@ -69,6 +75,7 @@ class GameServiceTest {
 
         assertTrue(created.isEmpty());
         verify(gameRepository, never()).save(any());
+        verify(auditEventPublisher, never()).publish(any());
     }
 
     private static User user(boolean isAdmin) {
@@ -87,4 +94,3 @@ class GameServiceTest {
         return g;
     }
 }
-

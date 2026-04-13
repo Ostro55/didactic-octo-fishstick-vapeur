@@ -1,5 +1,6 @@
 package com.vapeur.backwork.service;
 
+import com.vapeur.backwork.audit.AuditEventPublisher;
 import com.vapeur.backwork.entity.Game;
 import com.vapeur.backwork.entity.User;
 import com.vapeur.backwork.repository.UserRepository;
@@ -30,6 +31,9 @@ class UserServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    AuditEventPublisher auditEventPublisher;
+
     @InjectMocks
     UserService userService;
 
@@ -47,6 +51,7 @@ class UserServiceTest {
         assertTrue(out.isPresent());
         assertSame(u, out.get());
         verify(userRepository).save(u);
+        verify(auditEventPublisher).publish(any());
     }
 
     @Test
@@ -63,6 +68,7 @@ class UserServiceTest {
         assertTrue(out.isEmpty());
         verify(userRepository).findById(99L);
         verify(userRepository, never()).save(any(User.class));
+        verify(auditEventPublisher, never()).publish(any());
     }
 
     @Test
@@ -96,6 +102,7 @@ class UserServiceTest {
 
         verify(userRepository).findById(1L);
         verify(userRepository).save(existing);
+        verify(auditEventPublisher).publish(any());
     }
 
     @Test
@@ -145,6 +152,7 @@ class UserServiceTest {
         order.verify(userRepository).findById(5L);
         order.verify(userRepository).deleteRecommendedGameLinksForUser(5L);
         order.verify(userRepository).delete(u);
+        verify(auditEventPublisher).publish(any());
     }
 
     @Test
@@ -156,6 +164,7 @@ class UserServiceTest {
         verify(userRepository).findById(5L);
         verify(userRepository, never()).deleteRecommendedGameLinksForUser(any(Long.class));
         verify(userRepository, never()).delete(any(User.class));
+        verify(auditEventPublisher, never()).publish(any());
     }
 
     @Test
@@ -165,6 +174,6 @@ class UserServiceTest {
         InOrder order = inOrder(userRepository);
         order.verify(userRepository).deleteAllRecommendedGameLinks();
         order.verify(userRepository).deleteAllUsers();
+        verify(auditEventPublisher).publish(any());
     }
 }
-
