@@ -144,7 +144,7 @@ jobs:
         id: meta-backend
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repositoru }}/backend
+          images: ghcr.io/${{ github.repository }}/backend
           tags: |
             type=ref,event=branch
             type=semver, pattern={{version}}
