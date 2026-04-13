@@ -1,0 +1,12 @@
+services:
+  backend:
+    image: ghcr.io/ostro55/didactic-octo-fishstick-vapeur/backend:${TAG:-latest}
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: ghcr.io/ostro55/didactic-octo-fishstick-vapeur/frontend:${TAG:-latest}
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
