@@ -42,8 +42,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
 
       - name: Install dependencies
         working-directory: frontend
@@ -75,7 +81,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: jacoco-reportes-backend
+          name: jacoco-reports-backend
           path: |
             backend/target/site/jacoco/
             api-middleware/target/site/jacoco/
@@ -90,8 +96,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('frontend/package-lock.json') }}
 
       - name: Install dependencies
         working-directory: frontend
@@ -134,9 +144,9 @@ jobs:
         id: meta-backend
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/$ {{ github.repositoru }}/backend
+          images: ghcr.io/${{ github.repositoru }}/backend
           tags: |
-            type=ref, event=branch
+            type=ref,event=branch
             type=semver, pattern={{version}}
             type=semver, pattern={{major}}.{{minor}}
             type=sha, prefix=sha-
@@ -147,7 +157,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/frontend
           tags: |
-            type=ref, event=branch
+            type=ref,event=branch
             type=semver, pattern={{version}}
             type=semver, pattern={{major}}.{{minor}}
             type=sha, prefix=sha-
@@ -159,7 +169,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-          push: 'true'
+          push: true
           tags: ${{ steps.meta-backend.outputs.tags }}
           labels: ${{ steps.meta-backend.outputs.labels }}
           cache-from: type=gha
@@ -169,7 +179,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
-          push: 'true'
+          push: true
           tags: ${{ steps.meta-frontend.outputs.tags }}
           labels: ${{ steps.meta-frontend.outputs.labels }}
           cache-from: type=gha
