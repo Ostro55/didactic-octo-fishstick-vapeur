@@ -27,4 +27,6 @@ public interface IGameService {
      * Purge all data related to games (games + join tables). Useful before schema changes.
      */
     void cleanGames();
+
+    Optional<Game> acceptGame(Long id);
 }

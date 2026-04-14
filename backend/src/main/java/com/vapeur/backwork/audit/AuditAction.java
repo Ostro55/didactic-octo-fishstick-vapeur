@@ -9,6 +9,8 @@ public enum AuditAction {
     GAME_CREATED,
     GAME_SUBMITTED,
     GAME_DELETED,
-    GAMES_CLEANED
+    GAMES_CLEANED,
+    GAMES_ACCEPTED,
+    GAMES_REJECTED
 }
 

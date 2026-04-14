@@ -55,4 +55,10 @@ public class GameController {
         gameService.cleanGames();
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("games/{id}/accept")
+    public ResponseEntity<Game> acceptGame(@PathVariable("id") Long id) {
+        Optional<Game> game = gameService.acceptGame(id);
+        return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
 }

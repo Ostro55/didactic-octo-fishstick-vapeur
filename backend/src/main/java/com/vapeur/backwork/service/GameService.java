@@ -1,9 +1,6 @@
 package com.vapeur.backwork.service;
 
-import com.vapeur.backwork.audit.AuditAction;
-import com.vapeur.backwork.audit.AuditEventPublisher;
-import com.vapeur.backwork.audit.AuditEvents;
-import com.vapeur.backwork.audit.AuditResourceType;
+import com.vapeur.backwork.audit.*;
 import com.vapeur.backwork.entity.Game;
 import com.vapeur.backwork.entity.User;
 import com.vapeur.backwork.repository.GameRepository;
@@ -104,5 +101,33 @@ public class GameService implements IGameService {
                 null,
                 Map.of()
         ));
+    }
+
+    @Override
+    public Optional<Game> acceptGame(Long id) {
+        Optional<Game> optGame = gameRepository.findById(id);
+        if (optGame.isEmpty()) {
+            auditEventPublisher.publish(AuditEvents.system(
+                    AuditAction.GAMES_REJECTED,
+                    AuditResourceType.GAME,
+                    null,
+                    Map.of()
+            ));
+
+            return  Optional.empty();
+        } else {
+            Game game = optGame.get();
+            game.setStatus("accepted");
+            game = gameRepository.save(game);
+
+            auditEventPublisher.publish(AuditEvents.system(
+                    AuditAction.GAMES_ACCEPTED,
+                    AuditResourceType.GAME,
+                    game.getId() == null ? null : game.getId().toString(),
+                    Map.of("name", game.getName(), "status", game.getStatus())
+            ));
+
+            return Optional.of(game);
+        }
     }
 }
