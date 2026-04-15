@@ -90,11 +90,12 @@ export class FlickrService {
     public searchParams(params : Record<string, string | number | boolean | readonly (string | number | boolean)[]>, imagelistv2 : BehaviorSubject<PhotoSmall[]>)
     {
         var res = this.http.get<Photo[]>(
-            '/game/all'
+            '/games'
             , {
                 params : params,
                 responseType: 'json'
-            }, ).subscribe((buffer) => {
+            }, ).subscribe({
+            next: (buffer) => {
             console.log(buffer);
             var imagelist: PhotoSmall[] = buffer.map(a => {
                 var v =  this.find_url(a);
@@ -113,6 +114,10 @@ export class FlickrService {
 
             //this.imagelistv2.next(imagelist);
             imagelistv2.next(imagelist);
+            },
+            error: (err) => {
+                console.error('Failed to load games:', err);
+            }
         });
     }
 
@@ -135,7 +140,7 @@ export class FlickrService {
     // api_sig=89dc8eee7392a8133e416994a773f9f0
     //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
     var res = this.http.get<FlickrPhotoResponse>(
-        '/game/' + id
+        '/games/' + id
         , {
           params : {
 
@@ -144,9 +149,13 @@ export class FlickrService {
             nojsoncallback: 1,
           },
           responseType: 'json'
-        }, ).subscribe((buffer) => {
-      data.next(buffer);
-
+        }, ).subscribe({
+      next: (buffer) => {
+        data.next(buffer);
+      },
+      error: (err) => {
+        console.error('Failed to load game details:', err);
+      }
     });
   }
 

@@ -5,7 +5,6 @@ import {HomeButton} from "../home-button/home-button";
 import {AuthGuard} from "../auth-guard";
 import {FlickrService} from "../flickr-service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {form} from "@angular/forms/signals";
 
 @Component({
   selector: 'app-admin-page',
@@ -22,13 +21,15 @@ export class AdminPage {
   constructor(public authService: AuthService, private router: Router) { }
   protected guard = inject(AuthGuard);
 
+  public banUserId: string = '';
+  public unbanUserId: string = '';
 
   ngOnInit() {
   }
 
   seDeconnecter(){
     this.authService.SeDeconnecter();
-    this.router.navigateByUrl('/connexion');
+    this.router.navigateByUrl('/login');
   }
 
   ban(userid : string)
@@ -42,9 +43,4 @@ export class AdminPage {
     console.log("unban user with id: " + userid);
 
   }
-
-
-
-
-  protected readonly form = form;
 }
