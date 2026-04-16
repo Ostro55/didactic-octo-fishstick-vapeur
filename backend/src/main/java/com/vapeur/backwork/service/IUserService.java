@@ -1,5 +1,6 @@
 package com.vapeur.backwork.service;
 
+import com.vapeur.backwork.RequestDto.UserRequestDto;
 import com.vapeur.backwork.entity.User;
 
 import java.util.List;
@@ -16,6 +17,8 @@ public interface IUserService {
     Optional<User> updateUser(Long id, User updatedUser);
 
     Optional<User> deleteUserById(Long id);
+
+    Optional<User> login(UserRequestDto userRequestDto);
 
     /**
      * Purge all data related to users (users + join tables). Useful before schema changes.

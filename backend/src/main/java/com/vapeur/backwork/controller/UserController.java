@@ -1,5 +1,6 @@
 package com.vapeur.backwork.controller;
 
+import com.vapeur.backwork.RequestDto.UserRequestDto;
 import com.vapeur.backwork.entity.User;
 import com.vapeur.backwork.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,13 @@ public class UserController {
     public ResponseEntity<Void> clean() {
         userService.cleanUsers();
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("users/login")
+    public ResponseEntity<User> login(@RequestBody UserRequestDto userRequestDto) {
+        Optional<User> user = userService.login(userRequestDto);
+
+        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
 

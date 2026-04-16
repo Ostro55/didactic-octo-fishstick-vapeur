@@ -215,6 +215,24 @@ paths:
                 $ref: "#/components/schemas/User"
         "500":
           description: Erreur interne
+  /users/login:
+    post:
+      summary: Login as a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+      responses:
+        "200":
+          description: Return logged user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Not Found user
 
 components:
   schemas:
@@ -343,3 +361,14 @@ components:
         - username
         - email
         - isAdmin
+
+    UserRequestDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password

@@ -1,5 +1,6 @@
 package com.vapeur.backwork.service;
 
+import com.vapeur.backwork.RequestDto.UserRequestDto;
 import com.vapeur.backwork.audit.AuditAction;
 import com.vapeur.backwork.audit.AuditEventPublisher;
 import com.vapeur.backwork.audit.AuditEvents;
@@ -85,6 +86,18 @@ public class UserService implements IUserService {
             ));
         });
         return user;
+    }
+
+    @Override
+    public Optional<User> login(UserRequestDto userRequestDto) {
+        var allUser = userRepository.findAll();
+        allUser = allUser.stream().filter(x -> x.getEmail().equals(userRequestDto.email()) && x.getPassword().equals(userRequestDto.password())).toList();
+
+        if (allUser.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(allUser.get(0));
+        }
     }
 
     @Override
