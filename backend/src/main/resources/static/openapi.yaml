@@ -311,6 +311,8 @@ components:
           type: string
         isAdmin:
           type: boolean
+        password:
+          type: string
         recommendedGames:
           type: array
           items:
@@ -321,6 +323,7 @@ components:
         - username
         - email
         - isAdmin
+        - password
 
     UserCreate:
       type: object
@@ -331,6 +334,8 @@ components:
           type: string
         isAdmin:
           type: boolean
+        password:
+          type: string
         recommendedGames:
           type: array
           items:
@@ -341,6 +346,7 @@ components:
         - username
         - email
         - isAdmin
+        - password
 
     UserUpdate:
       type: object
@@ -351,6 +357,8 @@ components:
           type: string
         isAdmin:
           type: boolean
+        password:
+          type: string
         recommendedGames:
           type: array
           items:
@@ -361,6 +369,7 @@ components:
         - username
         - email
         - isAdmin
+        - password
 
     UserRequestDto:
       type: object
