@@ -1,5 +1,9 @@
 package com.vapeur.backwork.service;
 
+import com.vapeur.backwork.audit.AuditAction;
+import com.vapeur.backwork.audit.AuditEventPublisher;
+import com.vapeur.backwork.audit.AuditEvents;
+import com.vapeur.backwork.audit.AuditResourceType;
 import com.vapeur.backwork.entity.User;
 import com.vapeur.backwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -15,6 +20,7 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
+    private final AuditEventPublisher auditEventPublisher;
 
     @Override
     public List<User> getAll() {
@@ -29,6 +35,12 @@ public class UserService implements IUserService {
     @Override
     public Optional<User> addUser(User newUser) {
         userRepository.save(newUser);
+        auditEventPublisher.publish(AuditEvents.system(
+                AuditAction.USER_CREATED,
+                AuditResourceType.USER,
+                newUser.getId() == null ? null : newUser.getId().toString(),
+                Map.of("username", newUser.getUsername())
+        ));
         return Optional.of(newUser);
     }
 
@@ -44,6 +56,16 @@ public class UserService implements IUserService {
         existing.setAdmin(updatedUser.isAdmin());
         existing.setRecommendedGames(updatedUser.getRecommendedGames() == null ? new HashSet<>() : updatedUser.getRecommendedGames());
         userRepository.save(existing);
+        auditEventPublisher.publish(AuditEvents.system(
+                AuditAction.USER_UPDATED,
+                AuditResourceType.USER,
+                existing.getId() == null ? null : existing.getId().toString(),
+                Map.of(
+                        "username", existing.getUsername(),
+                        "email", existing.getEmail(),
+                        "isAdmin", existing.isAdmin()
+                )
+        ));
         return Optional.of(existing);
     }
 
@@ -55,6 +77,12 @@ public class UserService implements IUserService {
             // Ensure join table is cleared before deleting the user (works for both H2 and Postgres).
             userRepository.deleteRecommendedGameLinksForUser(u.getId());
             userRepository.delete(u);
+            auditEventPublisher.publish(AuditEvents.system(
+                    AuditAction.USER_DELETED,
+                    AuditResourceType.USER,
+                    u.getId() == null ? null : u.getId().toString(),
+                    Map.of("username", u.getUsername())
+            ));
         });
         return user;
     }
@@ -65,5 +93,11 @@ public class UserService implements IUserService {
         // Order matters because of foreign keys.
         userRepository.deleteAllRecommendedGameLinks();
         userRepository.deleteAllUsers();
+        auditEventPublisher.publish(AuditEvents.system(
+                AuditAction.USERS_CLEANED,
+                AuditResourceType.SYSTEM,
+                null,
+                Map.of()
+        ));
     }
 }

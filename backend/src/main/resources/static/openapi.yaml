@@ -72,6 +72,33 @@ paths:
         "204":
           description: Purge effectuee
 
+  /games/save:
+    post:
+      summary: Creer un jeu (statut derive de l'utilisateur)
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: Id de l'utilisateur appelant (admin => accepted, sinon pending)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GameCreate"
+      responses:
+        "201":
+          description: Jeu cree
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "404":
+          description: Utilisateur introuvable
+
   /games/{id}:
     get:
       summary: Recuperer un jeu par id
@@ -199,6 +226,9 @@ components:
           format: int64
         name:
           type: string
+        status:
+          type: string
+          description: Statut du jeu (ex: pending, accepted)
         price:
           type: integer
           format: int64
@@ -221,6 +251,9 @@ components:
       properties:
         name:
           type: string
+        status:
+          type: string
+          description: Ignore par /games/save (derive de l'utilisateur)
         price:
           type: integer
           format: int64

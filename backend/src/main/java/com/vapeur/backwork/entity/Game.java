@@ -26,7 +26,7 @@ public class Game {
     private Timestamp release_date;
     private String img_url;
     private String editor;
-    private String status; // Can be Pending or Approved
+    private String status = "pending";
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = GameGenre.class)
     @Enumerated(EnumType.STRING)
