@@ -17,16 +17,16 @@
 
         <div class="admin-card">
             <h2>🚫 Bannir un utilisateur</h2>
-            <form (ngSubmit)="ban($event)">
-                <input type="text" id="userid" name="userid" placeholder="ID utilisateur à bannir">
+            <form (ngSubmit)="ban(banUserId)">
+                <input type="text" [(ngModel)]="banUserId" name="banUserId" placeholder="ID utilisateur à bannir">
                 <button type="submit" class="danger-btn">Bannir</button>
             </form>
         </div>
 
         <div class="admin-card">
             <h2>✅ Débannir un utilisateur</h2>
-            <form (ngSubmit)="unban($event)">
-                <input type="text" id="userid" name="userid" placeholder="ID utilisateur à débannir">
+            <form (ngSubmit)="unban(unbanUserId)">
+                <input type="text" [(ngModel)]="unbanUserId" name="unbanUserId" placeholder="ID utilisateur à débannir">
                 <button type="submit" class="success-btn">Débannir</button>
             </form>
         </div>

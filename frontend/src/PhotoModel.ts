@@ -43,7 +43,7 @@ export class PhotoSmall {
     public static PhotoSmall2()
     {
         let p = new PhotoSmall();
-        p.id =- -1;
+        p.id = -1;
         p.name = "";
         p.price = 0;
         p.genre = [];

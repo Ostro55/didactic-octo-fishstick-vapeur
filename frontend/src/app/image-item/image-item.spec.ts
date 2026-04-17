@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 import { ImageItem } from './image-item';
 import {PhotoSmall} from "../../PhotoModel";
@@ -9,7 +10,8 @@ describe('ImageItem', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ImageItem]
+      imports: [ImageItem],
+      providers: [provideHttpClient(withFetch())]
     })
     .compileComponents();
     fixture = TestBed.createComponent(ImageItem);

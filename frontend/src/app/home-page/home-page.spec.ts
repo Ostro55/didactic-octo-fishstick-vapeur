@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 import { HomePage } from './home-page';
 
@@ -8,7 +9,8 @@ describe('HomePage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomePage]
+      imports: [HomePage],
+      providers: [provideHttpClient(withFetch())]
     })
     .compileComponents();
 
