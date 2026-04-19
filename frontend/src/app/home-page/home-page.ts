@@ -7,6 +7,7 @@ import {NextPage} from "../next-page/next-page";
 import {BehaviorSubject} from "rxjs";
 import {PhotoSmall} from "../../PhotoModel";
 import {FlickrService} from "../flickr-service";
+import {AuthService} from "../auth-service";
 
 @Component({
   selector: 'app-home-page',
@@ -19,7 +20,9 @@ import {FlickrService} from "../flickr-service";
   styleUrl: './home-page.css',
 })
 export class HomePage {
+
   protected api = inject(FlickrService);
+  public authService: AuthService = inject(AuthService)
 
   imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
 

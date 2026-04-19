@@ -18,8 +18,9 @@ import {form} from "@angular/forms/signals";
   styleUrl: './admin-page.css',
 })
 export class AdminPage {
+  public authService: AuthService = inject(AuthService)
 
-  constructor(public authService: AuthService, private router: Router) { }
+  constructor( private router: Router) { }
   protected guard = inject(AuthGuard);
 
 

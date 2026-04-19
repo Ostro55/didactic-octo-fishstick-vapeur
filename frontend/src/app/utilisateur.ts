@@ -1,6 +1,7 @@
 export interface Utilisateur {
     email: string;
     password: string;
+    id : number;
 }
 
 export class UserConnectd {

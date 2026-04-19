@@ -2,6 +2,12 @@
 <app-overlay >
 
 </app-overlay>
+
+@if (authService.estConnecte()){
+    <button> add a game</button>
+}
+
+
 <app-image-list [imagelistv2]=this.imagelistv2>
 
 </app-image-list>

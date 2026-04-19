@@ -1,6 +1,11 @@
 {
-  "/game/*": {
-    "target": "http://localhost:8080/",
+  "/games": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/users": {
+    "target": "http://localhost:8080",
     "secure": false,
     "changeOrigin": true
   }

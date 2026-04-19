@@ -3,6 +3,30 @@ export interface FlickrPhotoResponse {
     stat: string;
 }
 
+export type CreateUser =  {
+    username: string
+    email: string
+    isAdmin: boolean
+    password: string
+}
+
+
+export type UsersResponse = {
+    id: number
+    username: string
+    email: string
+    isAdmin: boolean
+    recommendedGames: RecommendedGame[]
+}
+
+export type RecommendedGame = {
+    id: number
+    name: string
+    price: number
+    genre: string[]
+    makingTime: string
+}
+
 export interface PhotoInfo {
     id: string;
     secret: string;

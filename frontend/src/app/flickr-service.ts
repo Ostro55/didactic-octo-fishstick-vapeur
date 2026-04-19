@@ -1,9 +1,9 @@
 import {ApplicationConfig, inject, Injectable, signal, Signal} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, firstValueFrom} from "rxjs";
 import {HttpClient, HttpParams, provideHttpClient, withFetch} from "@angular/common/http";
 import {scheduleReadableStreamLike} from "rxjs/internal/scheduled/scheduleReadableStreamLike";
 import {ApiResponse, Photo, PhotoSmall, PhotosPage} from "../PhotoModel";
-import {FlickrPhotoResponse, PhotoInfo} from "../PhotoURL";
+import {CreateUser, FlickrPhotoResponse, PhotoInfo, RecommendedGame, UsersResponse} from "../PhotoURL";
 
 
 @Injectable({
@@ -90,7 +90,7 @@ export class FlickrService {
     public searchParams(params : Record<string, string | number | boolean | readonly (string | number | boolean)[]>, imagelistv2 : BehaviorSubject<PhotoSmall[]>)
     {
         var res = this.http.get<Photo[]>(
-            '/game/all'
+            '/games`'
             , {
                 params : params,
                 responseType: 'json'
@@ -135,7 +135,7 @@ export class FlickrService {
     // api_sig=89dc8eee7392a8133e416994a773f9f0
     //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
     var res = this.http.get<FlickrPhotoResponse>(
-        '/game/' + id
+        '/games' + id
         , {
           params : {
 
@@ -149,5 +149,37 @@ export class FlickrService {
 
     });
   }
+
+    public List_user(data : BehaviorSubject<UsersResponse[]  | undefined>)
+    {
+        //https://www.flickr.com/services/rest/?
+        // method=flickr.photos.getInfo&
+        // api_key=a9ea63761e96e6b316d83d062cce5726&
+        // photo_id=54993765443&
+        // format=json&
+        // nojsoncallback=1&
+        // auth_token=72157720960825727-a8bc48f55acbafc8&
+        // api_sig=89dc8eee7392a8133e416994a773f9f0
+        //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
+
+        var res = this.http.get<UsersResponse[]>(
+            '/users' ).subscribe(data) ;
+    }
+
+    public async Create_user(email : string,password: string,isAdmin : boolean){
+      var  b: CreateUser = {
+          username: email,
+          email: email,
+          isAdmin: isAdmin,
+          password: password
+      }
+      var t =   await firstValueFrom(this.http.post(
+          '/users',
+          b
+      ))
+
+
+
+    }
 
 }

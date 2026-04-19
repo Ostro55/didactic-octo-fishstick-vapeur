@@ -1,5 +1,17 @@
 <app-home-button ></app-home-button>
 
+<div class="admin-container">
+
+    <div class="admin-card header-card">
+        <h1>🎮 User</h1>
+        <p class="email">
+            Connecté en tant que <span>{{ this.authService.userInfo?.email }}</span>
+        </p>
+
+        <button class="logout-btn" (click)="seDeconnecter()">
+            Se déconnecter
+        </button>
+    </div>
 
 
-<p>user-page works!</p>
+</div>
