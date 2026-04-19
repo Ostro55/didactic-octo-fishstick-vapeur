@@ -40,4 +40,10 @@ export class HomePage {
     this.router.navigateByUrl('/addgame');
 
   }
+
+  public ButtonAddgame()
+  {
+    this.router.navigateByUrl('/addgame');
+
+  }
 }

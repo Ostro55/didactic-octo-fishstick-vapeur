@@ -2,10 +2,9 @@ import {ApplicationConfig, inject, Injectable, signal, Signal} from '@angular/co
 import {BehaviorSubject, firstValueFrom} from "rxjs";
 import {HttpClient, HttpParams, provideHttpClient, withFetch} from "@angular/common/http";
 import {scheduleReadableStreamLike} from "rxjs/internal/scheduled/scheduleReadableStreamLike";
-import {ApiResponse, GameRequest, LoginUser, Photo, PhotoSmall, PhotosPage} from "../PhotoModel";
+import {ApiResponse, GameRequest, Photo, PhotoSmall, PhotosPage} from "../PhotoModel";
 import {CreateUser, FlickrPhotoResponse, PhotoInfo, RecommendedGame, UsersResponse} from "../PhotoURL";
 import {AddGame} from "./add-game/add-game";
-import {Utilisateur} from "./utilisateur";
 
 
 @Injectable({
@@ -27,7 +26,8 @@ class FlickrService {
   public lastcall  :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {};
 
 
-  public search(value : string,genre:string[],minprice : number,maxprice: number,  imagelistv2 : BehaviorSubject<PhotoSmall[]>){
+  public search(value : string,mindate :string, maxdate:string,sort: string,safe : number, geo:boolean,in_gallery : boolean,tags : string,
+                imagelistv2 : BehaviorSubject<PhotoSmall[]>){
 
 
       //https://serpapi.com/search.json?q=Apple&engine=google_images&ijn=0
@@ -37,23 +37,45 @@ class FlickrService {
             console.log('The image is ' + buffer + ' bytes large');
           });
        */
-      //var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {}
+      var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {}
+      /*
       var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {
+        api_key: this.api_key,
+
+        method : "flickr.photos.search",
+        format:"json",
+        nojsoncallback: 1,
+        text : value,
+        extras :"url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o",
+        page : this.page,
 
       };
-      if (genre.length != 0  )
+      if (mindate != "" && maxdate != "")
       {
-        params["genre"] = genre;
+        params["min_upload_date"] = mindate;
+        params["max_upload_date"] = maxdate;
       }
-      if (minprice != -1)
+      if (sort != "")
       {
-          params["minPrice"] = minprice;
-          params["maxPrice"] = maxprice;
+        params["sort"] = sort; //date-posted-asc, date-posted-desc, date-taken-asc, date-taken-desc, interestingness-desc, interestingness-asc, and relevance
       }
-      if (value != "")
+      if (safe != -1)
       {
-          params["name"] = value
+        params["safe_search"] = safe;
       }
+      if (geo )
+      {
+        params["has_geo"] = geo;
+      }
+      if (in_gallery)
+      {
+        params["in_gallery"] = in_gallery;
+      }
+      if (tags != "")
+      {
+          params["tags"] = tags;
+      }
+      */
       this.lastcall = params;
 
       this.searchParams(params,imagelistv2);
@@ -153,23 +175,6 @@ class FlickrService {
 
 
 
-    public Login_User(data : BehaviorSubject<UsersResponse  | undefined>,login:Utilisateur)
-    {
-        //https://www.flickr.com/services/rest/?
-        // method=flickr.photos.getInfo&
-        // api_key=a9ea63761e96e6b316d83d062cce5726&
-        // photo_id=54993765443&
-        // format=json&
-        // nojsoncallback=1&
-        // auth_token=72157720960825727-a8bc48f55acbafc8&
-        // api_sig=89dc8eee7392a8133e416994a773f9f0
-        //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
-        var loginreq = new LoginUser(login.email,login.email,login.password)
-        var res = this.http.post<UsersResponse>(
-            '/users/login',
-            loginreq
-        ).subscribe(data) ;
-    }
 
     public List_user(data : BehaviorSubject<UsersResponse[]  | undefined>)
     {

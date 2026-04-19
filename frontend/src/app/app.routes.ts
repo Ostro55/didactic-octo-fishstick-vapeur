@@ -7,7 +7,6 @@ import {AdminPage} from "./admin-page/admin-page";
 import {LoginPage} from "./login-page/login-page";
 import { AuthGuard } from './auth-guard';
 import {AddGame} from "./add-game/add-game";
-import {SiginPage} from "./sigin-page/sigin-page";
 
 export const routes: Routes = [
 
@@ -15,7 +14,6 @@ export const routes: Routes = [
     { path: 'admin', component: AdminPage , canActivate: [AuthGuard] },
     { path: 'user', component: UserPage , canActivate: [AuthGuard]},
     { path: 'login', component: LoginPage},
-    { path: 'singin', component: SiginPage},
     { path: 'search', component: SearchPage},
     { path: 'addgame', component: AddGame},
 
