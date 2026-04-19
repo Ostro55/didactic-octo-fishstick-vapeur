@@ -1,5 +1,5 @@
 import {Component, inject, Input, input} from '@angular/core';
-import {FlickrService} from "../flickr-service";
+import FlickrService from "../flickr-service";
 import {FormsModule} from "@angular/forms";
 import { ActivatedRoute } from '@angular/router'
 import {BehaviorSubject} from "rxjs";

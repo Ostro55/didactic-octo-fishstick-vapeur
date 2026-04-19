@@ -13,6 +13,27 @@ export interface Photo {
     status: string | null;
 }
 
+export class GameRequest {
+    public name: string;
+    public price: number;
+    public genre: string[];
+    public makingTime: Date;
+
+    constructor(
+        name: string = "",
+        price: number = 1,
+        genre: string[] = [],
+        makingTime: Date = new Date(Date.now())
+    ) {
+        this.name = name;
+        this.price = price;
+        this.genre = genre;
+        this.makingTime = makingTime;
+    }
+
+}
+
+
 export interface PhotosPage {
     page: number;
     pages: number;

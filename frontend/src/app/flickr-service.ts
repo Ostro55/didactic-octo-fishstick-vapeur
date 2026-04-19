@@ -2,15 +2,16 @@ import {ApplicationConfig, inject, Injectable, signal, Signal} from '@angular/co
 import {BehaviorSubject, firstValueFrom} from "rxjs";
 import {HttpClient, HttpParams, provideHttpClient, withFetch} from "@angular/common/http";
 import {scheduleReadableStreamLike} from "rxjs/internal/scheduled/scheduleReadableStreamLike";
-import {ApiResponse, Photo, PhotoSmall, PhotosPage} from "../PhotoModel";
+import {ApiResponse, GameRequest, Photo, PhotoSmall, PhotosPage} from "../PhotoModel";
 import {CreateUser, FlickrPhotoResponse, PhotoInfo, RecommendedGame, UsersResponse} from "../PhotoURL";
+import {AddGame} from "./add-game/add-game";
 
 
 @Injectable({
   providedIn: 'root',
 })
 
-export class FlickrService {
+class FlickrService {
 
     url = "http://localhost:8080";
 
@@ -90,7 +91,7 @@ export class FlickrService {
     public searchParams(params : Record<string, string | number | boolean | readonly (string | number | boolean)[]>, imagelistv2 : BehaviorSubject<PhotoSmall[]>)
     {
         var res = this.http.get<Photo[]>(
-            '/games`'
+            '/games'
             , {
                 params : params,
                 responseType: 'json'
@@ -135,11 +136,10 @@ export class FlickrService {
     // api_sig=89dc8eee7392a8133e416994a773f9f0
     //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
     var res = this.http.get<FlickrPhotoResponse>(
-        '/games' + id
+        '/games/' + id
         , {
           params : {
 
-            method : "flickr.photos.getInfo",
             format:"json",
             nojsoncallback: 1,
           },
@@ -149,6 +149,32 @@ export class FlickrService {
 
     });
   }
+
+
+    public add_game(game: GameRequest)
+    {
+        //https://www.flickr.com/services/rest/?
+        // method=flickr.photos.getInfo&
+        // api_key=a9ea63761e96e6b316d83d062cce5726&
+        // photo_id=54993765443&
+        // format=json&
+        // nojsoncallback=1&
+        // auth_token=72157720960825727-a8bc48f55acbafc8&
+        // api_sig=89dc8eee7392a8133e416994a773f9f0
+        //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
+
+
+
+        var res = this.http.post(
+            '/games',
+            game,
+            ).subscribe(() => {
+                console.log("send img")
+        });
+    }
+
+
+
 
     public List_user(data : BehaviorSubject<UsersResponse[]  | undefined>)
     {
@@ -183,3 +209,5 @@ export class FlickrService {
     }
 
 }
+
+export default FlickrService

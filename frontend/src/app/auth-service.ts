@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {UserConnectd, Utilisateur} from "./utilisateur";
-import {FlickrService} from './flickr-service'
+import FlickrService from './flickr-service'
 import {BehaviorSubject} from "rxjs";
 import {UsersResponse} from "../PhotoURL";
 

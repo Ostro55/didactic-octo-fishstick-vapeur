@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {AuthService} from "../auth-service";
 import {Router} from "@angular/router";
 import {NgClass} from "@angular/common";
-import {FlickrService} from "../flickr-service";
+import FlickrService from "../flickr-service";
 
 @Component({
   selector: 'app-login-page',

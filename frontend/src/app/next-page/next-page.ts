@@ -1,5 +1,5 @@
 import {Component, inject, Input} from '@angular/core';
-import {FlickrService} from "../flickr-service";
+import FlickrService from "../flickr-service";
 import {AsyncPipe} from "@angular/common";
 import {BehaviorSubject} from "rxjs";
 import {PhotoSmall} from "../../PhotoModel";

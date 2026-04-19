@@ -6,6 +6,7 @@ import {SearchPage} from "./search-page/search-page";
 import {AdminPage} from "./admin-page/admin-page";
 import {LoginPage} from "./login-page/login-page";
 import { AuthGuard } from './auth-guard';
+import {AddGame} from "./add-game/add-game";
 
 export const routes: Routes = [
 
@@ -14,6 +15,8 @@ export const routes: Routes = [
     { path: 'user', component: UserPage , canActivate: [AuthGuard]},
     { path: 'login', component: LoginPage},
     { path: 'search', component: SearchPage},
+    { path: 'addgame', component: AddGame},
+
 
     //{ path: 'login', component: LoginComponent },
     //{ path: 'register', component: RegisterComponent },

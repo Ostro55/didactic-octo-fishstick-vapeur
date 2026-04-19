@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FlickrService } from './flickr-service';
+import FlickrService from './flickr-service';
 
 describe('FlickrService', () => {
   let service: FlickrService;

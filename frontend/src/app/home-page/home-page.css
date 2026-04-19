@@ -25,6 +25,28 @@ app-overlay {
     display: block;
 }
 
+.steam-add-game-btn {
+    margin: 18px 20px 0;
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 18px;
+    background: linear-gradient(180deg, #7cc4ff 0%, #4a93df 100%);
+    color: #08121d;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(74, 147, 223, 0.28);
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.steam-add-game-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
+
+.steam-add-game-btn:active {
+    transform: translateY(0);
+}
+
 app-image-list {
     display: block;
     max-width: 1440px;

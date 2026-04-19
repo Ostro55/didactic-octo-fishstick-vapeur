@@ -2,7 +2,7 @@ import {Component, inject, Input} from '@angular/core';
 import {AsyncPipe, NgOptimizedImage} from "@angular/common";
 import {BehaviorSubject} from "rxjs";
 import {FlickrPhotoResponse, PhotoInfo} from "../../PhotoURL";
-import {FlickrService} from "../flickr-service";
+import FlickrService from "../flickr-service";
 import {Photo, PhotoSmall} from "../../PhotoModel";
 import {OverlayService} from "../overlay-service";
 

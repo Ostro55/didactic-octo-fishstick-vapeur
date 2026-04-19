@@ -3,7 +3,7 @@ import {AuthService} from "../auth-service";
 import {Router} from "@angular/router";
 import {HomeButton} from "../home-button/home-button";
 import {AuthGuard} from "../auth-guard";
-import {FlickrService} from "../flickr-service";
+import FlickrService from "../flickr-service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {form} from "@angular/forms/signals";
 

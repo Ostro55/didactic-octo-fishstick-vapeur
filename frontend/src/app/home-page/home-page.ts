@@ -6,8 +6,10 @@ import {ImageList} from "../image-list/image-list";
 import {NextPage} from "../next-page/next-page";
 import {BehaviorSubject} from "rxjs";
 import {PhotoSmall} from "../../PhotoModel";
-import {FlickrService} from "../flickr-service";
+import FlickrService from "../flickr-service";
 import {AuthService} from "../auth-service";
+import {Router} from "@angular/router";
+import {FormBuilder} from "@angular/forms";
 
 @Component({
   selector: 'app-home-page',
@@ -25,9 +27,17 @@ export class HomePage {
   public authService: AuthService = inject(AuthService)
 
   imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
+  constructor(
+      private router: Router, private formBuilder: FormBuilder ) { }
 
   ngOnInit()
   {
     this.api.search("the best","","","",0,false,false,"",this.imagelistv2)
+  }
+
+  public ButtonAddgame()
+  {
+    this.router.navigateByUrl('/addgame');
+
   }
 }
