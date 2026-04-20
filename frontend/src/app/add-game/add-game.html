@@ -1,0 +1,32 @@
+<app-home-button ></app-home-button>
+
+
+<div class="add-game-page">
+    <section class="add-game-panel">
+        <h1>Add a game</h1>
+        <p class="subtitle">Create a new game entry with the same visual style as the home page.</p>
+
+        <form [formGroup]="theForm" (submit)="addgame()" class="add-game-form">
+            <label class="field">
+                <span>Name</span>
+                <input type="text" formControlName="name" placeholder="Game name">
+            </label>
+
+            <label class="field">
+                <span>Price</span>
+                <input type="number" formControlName="price" placeholder="0">
+            </label>
+
+            <label class="field">
+                <span>Genre</span>
+                <select multiple class="steam-select" (change)="onGenreChange($event)">
+        @for (g of genres; track g) {
+            <option [value]="g">{{ g }}</option>
+        }
+    </select>
+</label>
+
+            <button type="submit" class="primary-btn">Add game</button>
+        </form>
+    </section>
+</div>

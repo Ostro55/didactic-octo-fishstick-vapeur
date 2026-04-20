@@ -1,0 +1,130 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    color: #dfe7f1;
+    background:
+            radial-gradient(circle at top, rgba(55, 88, 125, 0.22), transparent 35%),
+            linear-gradient(180deg, #101923 0%, #0b1118 45%, #081018 100%);
+    --steam-panel: rgba(16, 24, 35, 0.86);
+    --steam-panel-border: rgba(130, 170, 210, 0.16);
+    --steam-accent: #66c0f4;
+    --steam-accent-strong: #3f8fd8;
+}
+
+.add-game-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+}
+
+.add-game-panel {
+    width: 100%;
+    max-width: 760px;
+    background: linear-gradient(180deg, rgba(16, 24, 35, 0.55), rgba(10, 16, 24, 0.78));
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 18px;
+    box-shadow:
+            0 18px 50px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    padding: 28px;
+}
+
+.add-game-panel h1 {
+    margin: 0 0 8px;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f3f7fb;
+}
+
+.subtitle {
+    margin: 0 0 24px;
+    color: rgba(223, 231, 241, 0.72);
+}
+
+.add-game-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field span {
+    font-size: 0.95rem;
+    color: rgba(223, 231, 241, 0.9);
+}
+
+.field input,
+.steam-select {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(9, 14, 20, 0.75);
+    color: #eaf2fb;
+    border-radius: 12px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.field input::placeholder {
+    color: rgba(223, 231, 241, 0.45);
+}
+
+.field input:focus {
+    border-color: rgba(102, 192, 244, 0.7);
+    box-shadow: 0 0 0 3px rgba(102, 192, 244, 0.14);
+}
+
+.steam-select {
+    min-height: 140px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.steam-select option {
+    background: #0b1118;
+    color: #eaf2fb;
+    padding: 10px;
+}
+
+
+.primary-btn {
+    grid-column: 1 / -1;
+    justify-self: end;
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 18px;
+    background: linear-gradient(180deg, var(--steam-accent), var(--steam-accent-strong));
+    color: #081018;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(63, 143, 216, 0.28);
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 720px) {
+    .add-game-form {
+        grid-template-columns: 1fr;
+    }
+
+    .primary-btn {
+        width: 100%;
+        justify-self: stretch;
+    }
+}
