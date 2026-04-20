@@ -332,8 +332,11 @@ components:
           type: string
           format: date-time
           nullable: true
+        description:
+          type: string
       required:
         - name
+        - price
 
     GameGenre:
       type: string

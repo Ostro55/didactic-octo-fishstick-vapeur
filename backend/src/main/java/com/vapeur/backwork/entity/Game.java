@@ -22,10 +22,10 @@ public class Game {
     @NonNull
     private String name;
     private Long price;
-    private String description;
+    private String description = "No Description";
     private Timestamp release_date;
     private String img_url;
-    private String editor;
+    private String editor = "UNKNOWN";
     private String status = "pending";
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = GameGenre.class)
