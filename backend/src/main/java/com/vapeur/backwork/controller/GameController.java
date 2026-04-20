@@ -39,6 +39,7 @@ public class GameController {
 
     @PostMapping("games/save")
     public ResponseEntity<Game> saveWithUser(@RequestParam("userId") Long userId, @RequestBody Game newGame) {
+        // The effective status is derived in the service from the calling user role.
         Optional<Game> game = gameService.addGame(newGame, userId);
         if (game.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(game.get(), HttpStatus.CREATED);
@@ -58,6 +59,7 @@ public class GameController {
 
     @PutMapping("games/{id}/accept")
     public ResponseEntity<Game> acceptGame(@PathVariable("id") Long id) {
+        // Keep the current API contract: missing game currently maps to 500 here.
         Optional<Game> game = gameService.acceptGame(id);
         return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }

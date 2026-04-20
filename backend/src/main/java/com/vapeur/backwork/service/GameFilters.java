@@ -15,6 +15,7 @@ final class GameFilters {
         String nameFilter = normalize(name);
         String genreFilter = normalize(genre);
 
+        // Filtering is intentionally kept in-memory for now because repositories do not expose query variants yet.
         var stream = games.stream();
 
         if (nameFilter != null) {

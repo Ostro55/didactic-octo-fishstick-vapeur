@@ -59,9 +59,9 @@ public class UserController {
 
     @PostMapping("users/login")
     public ResponseEntity<User> login(@RequestBody UserRequestDto userRequestDto) {
+        // This is a plain credential lookup, not a token/session-based authentication flow.
         Optional<User> user = userService.login(userRequestDto);
 
         return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
-
