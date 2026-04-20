@@ -2,9 +2,10 @@ import {ApplicationConfig, inject, Injectable, signal, Signal} from '@angular/co
 import {BehaviorSubject, firstValueFrom} from "rxjs";
 import {HttpClient, HttpParams, provideHttpClient, withFetch} from "@angular/common/http";
 import {scheduleReadableStreamLike} from "rxjs/internal/scheduled/scheduleReadableStreamLike";
-import {ApiResponse, GameRequest, Photo, PhotoSmall, PhotosPage} from "../PhotoModel";
+import {ApiResponse, GameRequest, LoginUser, Photo, PhotoSmall, PhotosPage} from "../PhotoModel";
 import {CreateUser, FlickrPhotoResponse, PhotoInfo, RecommendedGame, UsersResponse} from "../PhotoURL";
 import {AddGame} from "./add-game/add-game";
+import {Utilisateur} from "./utilisateur";
 
 
 @Injectable({
@@ -175,6 +176,23 @@ class FlickrService {
 
 
 
+    public Login_User(data : BehaviorSubject<UsersResponse  | undefined>,login:Utilisateur)
+    {
+        //https://www.flickr.com/services/rest/?
+        // method=flickr.photos.getInfo&
+        // api_key=a9ea63761e96e6b316d83d062cce5726&
+        // photo_id=54993765443&
+        // format=json&
+        // nojsoncallback=1&
+        // auth_token=72157720960825727-a8bc48f55acbafc8&
+        // api_sig=89dc8eee7392a8133e416994a773f9f0
+        //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
+        var loginreq = new LoginUser(login.email,login.email,login.password)
+        var res = this.http.post<UsersResponse>(
+            '/users/login',
+            loginreq
+        ).subscribe(data) ;
+    }
 
     public List_user(data : BehaviorSubject<UsersResponse[]  | undefined>)
     {
