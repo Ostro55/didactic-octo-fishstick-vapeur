@@ -27,8 +27,7 @@ class FlickrService {
   public lastcall  :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {};
 
 
-  public search(value : string,mindate :string, maxdate:string,sort: string,safe : number, geo:boolean,in_gallery : boolean,tags : string,
-                imagelistv2 : BehaviorSubject<PhotoSmall[]>){
+  public search(value : string,genre:string[],minprice : number,maxprice: number,  imagelistv2 : BehaviorSubject<PhotoSmall[]>){
 
 
       //https://serpapi.com/search.json?q=Apple&engine=google_images&ijn=0
@@ -38,45 +37,23 @@ class FlickrService {
             console.log('The image is ' + buffer + ' bytes large');
           });
        */
-      var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {}
-      /*
+      //var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {}
       var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {
-        api_key: this.api_key,
-
-        method : "flickr.photos.search",
-        format:"json",
-        nojsoncallback: 1,
-        text : value,
-        extras :"url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o",
-        page : this.page,
 
       };
-      if (mindate != "" && maxdate != "")
+      if (genre.length != 0  )
       {
-        params["min_upload_date"] = mindate;
-        params["max_upload_date"] = maxdate;
+        params["genre"] = genre;
       }
-      if (sort != "")
+      if (minprice != -1)
       {
-        params["sort"] = sort; //date-posted-asc, date-posted-desc, date-taken-asc, date-taken-desc, interestingness-desc, interestingness-asc, and relevance
+          params["minPrice"] = minprice;
+          params["maxPrice"] = maxprice;
       }
-      if (safe != -1)
+      if (value != "")
       {
-        params["safe_search"] = safe;
+          params["name"] = value
       }
-      if (geo )
-      {
-        params["has_geo"] = geo;
-      }
-      if (in_gallery)
-      {
-        params["in_gallery"] = in_gallery;
-      }
-      if (tags != "")
-      {
-          params["tags"] = tags;
-      }
-      */
       this.lastcall = params;
 
       this.searchParams(params,imagelistv2);
