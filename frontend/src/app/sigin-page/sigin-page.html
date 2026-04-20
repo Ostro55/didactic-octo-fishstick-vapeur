@@ -1,0 +1,22 @@
+<h1 style="text-align:center">
+</h1>
+<div class="login">
+    <h2 class="login-header">S'identifier</h2>
+    <form [formGroup]="loginForm" class="login-container" (ngSubmit)="Singup()">
+        <p [ngClass]="{ 'has-error': isSubmitted }">
+            <input type="email" placeholder="Email" formControlName="email">
+        </p>
+
+
+        <p [ngClass]="{ 'has-error': isSubmitted  }">
+            <input type="password" placeholder="Password" formControlName="password">
+        </p>
+
+        <p>
+            <input type="submit" value="Sigin">
+        </p>
+
+    </form>
+    <p>
+    </p>
+</div>
