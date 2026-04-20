@@ -36,7 +36,6 @@ export class ImageItem {
           {
               if (a != undefined)
               {
-                  var d = new Date(Number(a.photo.dateuploaded) * 1000)
                   this.photoflicker = a;
               }
 

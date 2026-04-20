@@ -15,22 +15,19 @@ import {PhotoSmall} from "../../PhotoModel";
 })
 export class SearchBar {
   protected api = inject(FlickrService);
-  public mindate :string = "";
-  public maxdate :string = "";
+  public genres: string[] =[
+    "action",
+    "thriller",
+    "singleplayer",
+    "horror",
+    "romance",
+    "multiplayer"
+  ];
+  public minprice :number = -1;
+  public maxprice :number = 0;
 
-  public sizeselect :string = "";
+  public genresselect :string[] = [];
 
-  public safeselect :number = -1;
-  public safe :[string,number][] = [["",-1],["safe",0],["moderate",1],["restricted",2]];
-
-  public is_ingallery : boolean = false;
-
-  public is_hasgeo : boolean = false;
-
-  public texttag :string = "";
-
-  public sortselect :string = "";
-  public sort :string[] = ["","date-posted-asc","date-posted-desc","date-taken-asc","date-taken-desc","interestingness-desc","interestingness-asc","relevance"];
 
   constructor(private activateRoute: ActivatedRoute){}
 
@@ -47,7 +44,7 @@ export class SearchBar {
     if (this.text != "")
     {
 
-      this.api.search(this.text,this.mindate,this.maxdate,this.sortselect,this.safeselect,this.is_hasgeo,this.is_ingallery,this.texttag,this.imagelistv2);
+      this.api.search(this.text,this.genresselect,this.minprice,this.maxprice,this.imagelistv2);
     }
   }
 

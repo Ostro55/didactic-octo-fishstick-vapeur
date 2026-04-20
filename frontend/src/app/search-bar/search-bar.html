@@ -15,66 +15,25 @@
             <button (click)="search()" class="steam-search-btn">Rechercher</button>
         </div>
 
-        <!-- Dates -->
+        <!-- Price -->
         <div class="search-group">
-            <label>📅 Date min</label>
-            <input type="date" [(ngModel)]="mindate" class="steam-input" />
+            <label> Price min</label>
+            <input type="number" [(ngModel)]="minprice" class="steam-input" />
         </div>
 
         <div class="search-group">
-            <label>📅 Date max</label>
-            <input type="date" [(ngModel)]="maxdate" class="steam-input" />
+            <label> Price max</label>
+            <input type="number" [(ngModel)]="maxprice" class="steam-input" />
         </div>
 
         <!-- Select -->
         <div class="search-group">
-            <label>📐 Taille</label>
-            <select [(ngModel)]="sizeselect" class="steam-input">
-                @for (i of this.api.size; track $index) {
-                    <option [value]="i[0]">{{ i[0] }}</option>
-                }
-            </select>
-        </div>
-
-        <div class="search-group">
-            <label>🛡️ Safe</label>
-            <select [(ngModel)]="safeselect" class="steam-input">
-                @for (i of safe; track $index) {
-                    <option [value]="i[0]">{{ i[0] }}</option>
-                }
-            </select>
-        </div>
-
-        <div class="search-group">
-            <label>↕️ Tri</label>
-            <select [(ngModel)]="sortselect" class="steam-input">
-                @for (i of sort; track $index) {
+            <label> genres</label>
+            <select [(ngModel)]="genresselect" class="steam-input">
+                @for (i of this.genres; track $index) {
                     <option [value]="i">{{ i }}</option>
                 }
             </select>
-        </div>
-
-        <!-- Checkboxes -->
-        <div class="search-group checkbox-group">
-            <label class="steam-checkbox">
-                <input type="checkbox" [(ngModel)]="is_hasgeo">
-                <span></span> Has geo
-            </label>
-
-            <label class="steam-checkbox">
-                <input type="checkbox" [(ngModel)]="is_ingallery">
-                <span></span> In gallery
-            </label>
-        </div>
-
-        <!-- Tags -->
-        <div class="search-group full">
-            <input
-                    type="text"
-                    [(ngModel)]="texttag"
-                    placeholder="Tags : art, game, fantasy..."
-                    class="steam-input"
-            />
         </div>
 
     </div>
