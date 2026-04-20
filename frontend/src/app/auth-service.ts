@@ -3,6 +3,8 @@ import {UserConnectd, Utilisateur} from "./utilisateur";
 import FlickrService from './flickr-service'
 import {BehaviorSubject} from "rxjs";
 import {UsersResponse} from "../PhotoURL";
+import {LoginUser} from "../PhotoModel";
+import {LoginPage} from "./login-page/login-page";
 
 @Injectable({
   providedIn: 'root',
@@ -14,27 +16,19 @@ export class AuthService {
   public userInfo: UserConnectd | null = null;
 
   //add request here to connect
-  public seConnecter(userInfo: Utilisateur){
-    var v = new BehaviorSubject<UsersResponse[]  | undefined>(undefined)
-    this.api.List_user(v)
+  public seConnecter(userInfo: Utilisateur, redir: LoginPage){
+    var v = new BehaviorSubject<UsersResponse  | undefined>(undefined)
+    this.api.Login_User(v,userInfo)
 
     return v.subscribe((a) =>
     {
       if (a != undefined)
       {
-        for (var t of a) {
-            if (userInfo.email == t.email){
-              localStorage.setItem('User', userInfo.email);
-              localStorage.setItem('ID', String(t.id));
-              localStorage.setItem('Admin', String(t.isAdmin));
-
-
-              this.userInfo = new UserConnectd(userInfo.email,String(t.id),t.isAdmin)
+              this.userInfo = new UserConnectd(a.email,String(a.id),a.isAdmin)
               console.log(this.userInfo)
-            }
-        }
 
       }
+
 
     })
 
