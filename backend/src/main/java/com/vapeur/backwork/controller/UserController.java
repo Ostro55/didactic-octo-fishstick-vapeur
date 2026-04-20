@@ -1,6 +1,7 @@
 package com.vapeur.backwork.controller;
 
 import com.vapeur.backwork.RequestDto.UserRequestDto;
+import com.vapeur.backwork.RequestDto.UserResponseDto;
 import com.vapeur.backwork.entity.User;
 import com.vapeur.backwork.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,36 +19,38 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("users")
-    public ResponseEntity<List<User>> getAll() {
-        List<User> allUsers = userService.getAll();
+    public ResponseEntity<List<UserResponseDto>> getAll() {
+        List<UserResponseDto> allUsers = userService.getAll().stream()
+                .map(UserResponseDto::from)
+                .toList();
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
     @PostMapping("users")
-    public ResponseEntity<User> save(@RequestBody User newUser) {
+    public ResponseEntity<UserResponseDto> save(@RequestBody User newUser) {
         Optional<User> user = userService.addUser(newUser);
-        return user.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED))
+        return user.map(value -> new ResponseEntity<>(UserResponseDto.from(value), HttpStatus.CREATED))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @GetMapping("users/{id}")
-    public ResponseEntity<User> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<UserResponseDto> getById(@PathVariable("id") Long id) {
         Optional<User> user = userService.getById(id);
-        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+        return user.map(value -> new ResponseEntity<>(UserResponseDto.from(value), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @PutMapping("users/{id}")
-    public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestBody User updatedUser) {
+    public ResponseEntity<UserResponseDto> update(@PathVariable("id") Long id, @RequestBody User updatedUser) {
         Optional<User> user = userService.updateUser(id, updatedUser);
-        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+        return user.map(value -> new ResponseEntity<>(UserResponseDto.from(value), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @DeleteMapping("users/{id}")
-    public ResponseEntity<User> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<UserResponseDto> deleteById(@PathVariable("id") Long id) {
         Optional<User> user = userService.deleteUserById(id);
-        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+        return user.map(value -> new ResponseEntity<>(UserResponseDto.from(value), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
@@ -58,10 +61,11 @@ public class UserController {
     }
 
     @PostMapping("users/login")
-    public ResponseEntity<User> login(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> login(@RequestBody UserRequestDto userRequestDto) {
         // This is a plain credential lookup, not a token/session-based authentication flow.
         Optional<User> user = userService.login(userRequestDto);
 
-        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return user.map(value -> new ResponseEntity<>(UserResponseDto.from(value), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

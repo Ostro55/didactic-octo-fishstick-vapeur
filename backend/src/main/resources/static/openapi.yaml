@@ -311,8 +311,6 @@ components:
           type: string
         isAdmin:
           type: boolean
-        password:
-          type: string
         recommendedGames:
           type: array
           items:
@@ -323,6 +321,17 @@ components:
         - username
         - email
         - isAdmin
+        - password
+
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
         - password
 
     UserCreate:

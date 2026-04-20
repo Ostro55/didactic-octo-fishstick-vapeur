@@ -46,20 +46,23 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value("alice@example.com"))
                 .andExpect(jsonPath("$.isAdmin").value(false))
                 .andExpect(jsonPath("$.recommendedGames", hasSize(0)))
+                .andExpect(jsonPath("$.password").doesNotExist())
                 .andReturn();
 
         mvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].username").value("alice"))
-                .andExpect(jsonPath("$[0].isAdmin").value(false));
+                .andExpect(jsonPath("$[0].isAdmin").value(false))
+                .andExpect(jsonPath("$[0].password").doesNotExist());
 
         Number userIdNum = com.jayway.jsonpath.JsonPath.read(create.getResponse().getContentAsString(), "$.id");
         long userId = userIdNum.longValue();
 
         mvc.perform(get("/users/" + userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("alice"));
+                .andExpect(jsonPath("$.username").value("alice"))
+                .andExpect(jsonPath("$.password").doesNotExist());
     }
 
     @Test
@@ -78,15 +81,33 @@ class UserControllerTest {
                         .content(userJson("bob", "bob2@example.com", true)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("bob2@example.com"))
-                .andExpect(jsonPath("$.isAdmin").value(true));
+                .andExpect(jsonPath("$.isAdmin").value(true))
+                .andExpect(jsonPath("$.password").doesNotExist());
 
         mvc.perform(delete("/users/" + userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("bob"));
+                .andExpect(jsonPath("$.username").value("bob"))
+                .andExpect(jsonPath("$.password").doesNotExist());
 
         mvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    void login_doesNotExposePassword() throws Exception {
+        mvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson("charlie", "charlie@example.com", false)))
+                .andExpect(status().isCreated());
+
+        mvc.perform(post("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(loginJson("charlie@example.com", "pw")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("charlie"))
+                .andExpect(jsonPath("$.email").value("charlie@example.com"))
+                .andExpect(jsonPath("$.password").doesNotExist());
     }
 
     private static String userJson(String username, String email, boolean isAdmin) {
@@ -96,6 +117,13 @@ class UserControllerTest {
                 + ",\"email\":" + jsonString(email)
                 + ",\"isAdmin\":" + isAdmin
                 + ",\"recommendedGames\":[]"
+                + "}";
+    }
+
+    private static String loginJson(String email, String password) {
+        return "{"
+                + "\"email\":" + jsonString(email)
+                + ",\"password\":" + jsonString(password)
                 + "}";
     }
 
