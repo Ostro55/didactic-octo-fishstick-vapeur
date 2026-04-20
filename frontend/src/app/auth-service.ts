@@ -16,7 +16,7 @@ export class AuthService {
   public userInfo: UserConnectd | null = null;
 
   //add request here to connect
-  public seConnecter(userInfo: Utilisateur, redir: LoginPage){
+  public seConnecter(userInfo: Utilisateur){
     var v = new BehaviorSubject<UsersResponse  | undefined>(undefined)
     this.api.Login_User(v,userInfo)
 
@@ -24,7 +24,10 @@ export class AuthService {
     {
       if (a != undefined)
       {
-              this.userInfo = new UserConnectd(a.email,String(a.id),a.isAdmin)
+                     localStorage.setItem('User', a.email);
+                     localStorage.setItem('ID', String(a.id));
+                    localStorage.setItem('Admin', String(a.isAdmin));
+        this.userInfo = new UserConnectd(a.email,String(a.id),a.isAdmin)
               console.log(this.userInfo)
 
       }
