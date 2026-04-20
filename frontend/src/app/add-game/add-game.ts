@@ -53,6 +53,7 @@ export class AddGame {
     var body:GameRequest = new GameRequest(formValues.name,formValues.price,this.genre,new Date(Date.now()))
     console.log(body)
     this.api.add_game(body)
+    this.router.navigateByUrl('/');
   }
 
 }
