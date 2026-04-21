@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -14,6 +15,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -130,6 +132,68 @@ class GameControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gameJson("Celeste", 10, GameGenre.action.name())))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void importGames_withAdmin_importsCsv() throws Exception {
+        long adminId = createUser("admin", "admin@example.com", true);
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "games.csv",
+                "text/csv",
+                (
+                        "name,price,description,release_date,img_url,editor,genre,status\n" +
+                        "\"Doom Eternal\",5999,\"FPS\",2020-03-20,https://example.com/doom.jpg,id,action|horror,accepted\n" +
+                        "\"Stardew Valley\",1499,\"Farm sim\",2016-02-26,https://example.com/stardew.jpg,ConcernedApe,singleplayer|romance,\n"
+                ).getBytes()
+        );
+
+        mvc.perform(multipart("/admin/games/import")
+                        .file(file)
+                        .param("userId", String.valueOf(adminId)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.importedCount").value(2))
+                .andExpect(jsonPath("$.games", hasSize(2)))
+                .andExpect(jsonPath("$.games[0].name").value("Doom Eternal"))
+                .andExpect(jsonPath("$.games[0].genre", containsInAnyOrder("action", "horror")))
+                .andExpect(jsonPath("$.games[1].status").value("accepted"));
+    }
+
+    @Test
+    void importGames_withNonAdmin_returns403() throws Exception {
+        long userId = createUser("user", "user@example.com", false);
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "games.csv",
+                "text/csv",
+                "name,price,description,release_date,img_url,editor,genre,status\n".getBytes()
+        );
+
+        mvc.perform(multipart("/admin/games/import")
+                        .file(file)
+                        .param("userId", String.valueOf(userId)))
+                .andExpect(status().isForbidden())
+                .andExpect(content().string("L'utilisateur doit etre admin pour importer des jeux."));
+    }
+
+    @Test
+    void importGames_withInvalidCsv_returns400() throws Exception {
+        long adminId = createUser("admin", "admin@example.com", true);
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "games.csv",
+                "text/csv",
+                (
+                        "name,price,description,release_date,img_url,editor,genre,status\n" +
+                        "\"Broken\",oops,\"Desc\",2020-03-20,https://example.com/broken.jpg,studio,action,accepted\n"
+                ).getBytes()
+        );
+
+        mvc.perform(multipart("/admin/games/import")
+                        .file(file)
+                        .param("userId", String.valueOf(adminId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Prix invalide: oops"));
     }
 
     private long createUser(String username, String email, boolean isAdmin) throws Exception {
