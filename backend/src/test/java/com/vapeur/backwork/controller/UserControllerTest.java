@@ -1,15 +1,20 @@
 package com.vapeur.backwork.controller;
 
+import com.vapeur.backwork.entity.User;
+import com.vapeur.backwork.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,6 +31,12 @@ class UserControllerTest {
 
     @Autowired
     MockMvc mvc;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void cleanDb() throws Exception {
@@ -108,6 +119,18 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.username").value("charlie"))
                 .andExpect(jsonPath("$.email").value("charlie@example.com"))
                 .andExpect(jsonPath("$.password").doesNotExist());
+    }
+
+    @Test
+    void save_storesHashedPasswordInDatabase() throws Exception {
+        mvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson("dave", "dave@example.com", false)))
+                .andExpect(status().isCreated());
+
+        User storedUser = userRepository.findByEmail("dave@example.com").orElseThrow();
+        assertNotEquals("pw", storedUser.getPassword());
+        assertTrue(passwordEncoder.matches("pw", storedUser.getPassword()));
     }
 
     private static String userJson(String username, String email, boolean isAdmin) {

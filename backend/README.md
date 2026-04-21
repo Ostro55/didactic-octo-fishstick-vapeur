@@ -94,8 +94,7 @@ Active la publication des evenements d'audit vers Kafka. Variables importantes:
 - `GET /games` liste tous les jeux
 - `GET /games?name=Doom&genre=action&minPrice=10&maxPrice=50` filtre les jeux
 - `GET /games/{id}` recupere un jeu
-- `POST /games` cree un jeu sans contexte utilisateur
-- `POST /games/save?userId=1` cree un jeu en derivant le statut depuis l'utilisateur
+- `POST /games?userId=1` cree un jeu sans contexte utilisateur
 - `PUT /games/{id}/accept` passe un jeu au statut `accepted`
 - `DELETE /games` supprime tous les jeux et les tables de jointure associees
 
@@ -111,7 +110,7 @@ Genres supportes:
 Exemple de creation de jeu:
 
 ```bash
-curl -X POST http://localhost:8080/games/save?userId=1 \
+curl -X POST http://localhost:8080/games?userId=1 \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Hades",

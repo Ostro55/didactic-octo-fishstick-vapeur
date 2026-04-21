@@ -6,7 +6,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByEmail(String email);
 
     @Modifying
     @Query(value = "delete from user_recommended_games where user_id = :userId", nativeQuery = true)
@@ -20,4 +24,3 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "delete from users", nativeQuery = true)
     int deleteAllUsers();
 }
-
