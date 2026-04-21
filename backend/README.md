@@ -186,6 +186,11 @@ curl -X POST http://localhost:8080/users/login \
 - `isAdmin`
 - `recommendedGames`
 
+### 'Exemple importation CSV'
+
+curl -X POST "http://localhost:8080/admin/games/import?userId=1" \
+  -F "file=@src/main/resources/sample-games-import.csv"
+
 ## Documentation developpeur
 
 Le guide de reprise technique se trouve dans [docs/DEVELOPER_GUIDE.md](/home/epita/dev/projFullStack/didactic-octo-fishstick-vapeur/backend/docs/DEVELOPER_GUIDE.md).
