@@ -119,6 +119,43 @@ paths:
         "500":
           description: Erreur interne
 
+  /admin/games/import:
+    post:
+      summary: Importer un CSV de jeux en tant qu'admin
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: Id de l'utilisateur admin qui declenche l'import
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Jeux importes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameImportResponse"
+        "400":
+          description: CSV invalide
+        "403":
+          description: Utilisateur non admin
+        "404":
+          description: Utilisateur introuvable
+
   /users:
     get:
       summary: Lister les utilisateurs
@@ -258,6 +295,15 @@ components:
           uniqueItems: true
           nullable: true
         makingTime:
+    GameImportResponse:
+      type: object
+      properties:
+        importedCount:
+          type: integer
+        games:
+          type: array
+          items:
+            $ref: "#/components/schemas/Game"
           type: string
           format: date-time
           nullable: true
