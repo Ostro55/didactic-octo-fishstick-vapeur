@@ -131,8 +131,12 @@ class KafkaAuditIntegrationTest {
 
         User existing = userRepository.save(user("carol", "carol@example.com", false));
 
-        consumer = newConsumer();
+        // "latest" : le consumer démarre à la fin du topic,
+        // donc il ignore les messages publiés par createUser et submitGame.
+        // Le poll() initial force l'assignation des partitions avant la transaction.
+        consumer = newConsumerLatest();
         consumer.subscribe(List.of(TOPIC));
+        consumer.poll(java.time.Duration.ofMillis(500));
 
         TransactionTemplate tx = new TransactionTemplate(transactionManager);
         tx.executeWithoutResult(status -> {
@@ -157,6 +161,14 @@ class KafkaAuditIntegrationTest {
     private Consumer<String, String> newConsumer() {
         Map<String, Object> props = KafkaTestUtils.consumerProps("test-" + UUID.randomUUID(), "false", broker);
         props.put(org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        props.put(org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        return new KafkaConsumer<>(props);
+    }
+
+    private Consumer<String, String> newConsumerLatest() {
+        Map<String, Object> props = KafkaTestUtils.consumerProps("test-" + UUID.randomUUID(), "false", broker);
+        props.put(org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return new KafkaConsumer<>(props);
