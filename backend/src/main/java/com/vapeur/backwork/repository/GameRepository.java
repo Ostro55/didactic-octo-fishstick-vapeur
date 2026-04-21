@@ -8,6 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 public interface GameRepository extends JpaRepository<Game, Long> {
 
     @Modifying
+    @Query(value = "delete from user_recommended_games where game_id = ?1", nativeQuery = true)
+    int deleteRecommendedGameLinksForGame(Long gameId);
+
+    @Modifying
+    @Query(value = "delete from game_genres where game_id = ?1", nativeQuery = true)
+    int deleteGenresForGame(Long gameId);
+
+    @Modifying
     @Query(value = "delete from user_recommended_games", nativeQuery = true)
     int deleteAllRecommendedGameLinks();
 

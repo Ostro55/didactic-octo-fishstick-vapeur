@@ -37,21 +37,21 @@ public class UserController {
     public ResponseEntity<UserResponseDto> getById(@PathVariable("id") Long id) {
         Optional<User> user = userService.getById(id);
         return user.map(value -> new ResponseEntity<>(UserResponseDto.from(value), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("users/{id}")
     public ResponseEntity<UserResponseDto> update(@PathVariable("id") Long id, @RequestBody User updatedUser) {
         Optional<User> user = userService.updateUser(id, updatedUser);
         return user.map(value -> new ResponseEntity<>(UserResponseDto.from(value), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("users/{id}")
     public ResponseEntity<UserResponseDto> deleteById(@PathVariable("id") Long id) {
         Optional<User> user = userService.deleteUserById(id);
         return user.map(value -> new ResponseEntity<>(UserResponseDto.from(value), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("users")

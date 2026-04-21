@@ -31,12 +31,6 @@ public class GameController {
         return new ResponseEntity<>(allGames, HttpStatus.OK);
     }
 
-//    @PostMapping("games")
-//    public ResponseEntity<Game> save(@RequestBody Game newGame) {
-//        Optional<Game> game = gameService.addGame(newGame);
-//        return game.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-//    }
-
     @PostMapping("games")
     public ResponseEntity<Game> saveWithUser(@RequestParam(required = false) Long userId, @RequestBody Game newGame) {
         Optional<Game> game = gameService.addGame(newGame, userId);
@@ -47,7 +41,7 @@ public class GameController {
     @GetMapping("games/{id}")
     public ResponseEntity<Game> getbyId(@PathVariable("id") Long id) {
         Optional<Game> game = gameService.getById(id);
-        return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("games")
@@ -59,6 +53,12 @@ public class GameController {
     @PutMapping("games/{id}/accept")
     public ResponseEntity<Game> acceptGame(@PathVariable("id") Long id) {
         Optional<Game> game = gameService.acceptGame(id);
-        return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("games/{id}/rejected")
+    public ResponseEntity<Game> rejectGame(@PathVariable("id") Long id) {
+        Optional<Game> game = gameService.rejectGame(id);
+        return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

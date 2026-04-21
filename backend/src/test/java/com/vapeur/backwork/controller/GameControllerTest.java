@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -15,8 +14,8 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -108,7 +107,7 @@ class GameControllerTest {
     void saveWithUser_admin_setsAccepted() throws Exception {
         long adminId = createUser("admin", "admin@example.com", true);
 
-        mvc.perform(post("/games/save").param("userId", String.valueOf(adminId))
+        mvc.perform(post("/games").param("userId", String.valueOf(adminId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gameJson("Doom", 10, GameGenre.action.name())))
                 .andExpect(status().isCreated())
@@ -119,7 +118,7 @@ class GameControllerTest {
     void saveWithUser_nonAdmin_setsPending() throws Exception {
         long userId = createUser("user", "user@example.com", false);
 
-        mvc.perform(post("/games/save").param("userId", String.valueOf(userId))
+        mvc.perform(post("/games").param("userId", String.valueOf(userId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gameJson("Hades", 10, GameGenre.action.name())))
                 .andExpect(status().isCreated())
@@ -128,72 +127,39 @@ class GameControllerTest {
 
     @Test
     void saveWithUser_unknownUser_returns404() throws Exception {
-        mvc.perform(post("/games/save").param("userId", "999999")
+        mvc.perform(post("/games").param("userId", "999999")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gameJson("Celeste", 10, GameGenre.action.name())))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void importGames_withAdmin_importsCsv() throws Exception {
-        long adminId = createUser("admin", "admin@example.com", true);
-        MockMultipartFile file = new MockMultipartFile(
-                "file",
-                "games.csv",
-                "text/csv",
-                (
-                        "name,price,description,release_date,img_url,editor,genre,status\n" +
-                        "\"Doom Eternal\",5999,\"FPS\",2020-03-20,https://example.com/doom.jpg,id,action|horror,accepted\n" +
-                        "\"Stardew Valley\",1499,\"Farm sim\",2016-02-26,https://example.com/stardew.jpg,ConcernedApe,singleplayer|romance,\n"
-                ).getBytes()
-        );
-
-        mvc.perform(multipart("/admin/games/import")
-                        .file(file)
-                        .param("userId", String.valueOf(adminId)))
+    void reject_afterAccept_deletesGame() throws Exception {
+        MvcResult create = mvc.perform(post("/games")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gameJson("Doom", 10, GameGenre.action.name())))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.importedCount").value(2))
-                .andExpect(jsonPath("$.games", hasSize(2)))
-                .andExpect(jsonPath("$.games[0].name").value("Doom Eternal"))
-                .andExpect(jsonPath("$.games[0].genre", containsInAnyOrder("action", "horror")))
-                .andExpect(jsonPath("$.games[1].status").value("accepted"));
-    }
+                .andExpect(jsonPath("$.status").value("pending"))
+                .andReturn();
 
-    @Test
-    void importGames_withNonAdmin_returns403() throws Exception {
-        long userId = createUser("user", "user@example.com", false);
-        MockMultipartFile file = new MockMultipartFile(
-                "file",
-                "games.csv",
-                "text/csv",
-                "name,price,description,release_date,img_url,editor,genre,status\n".getBytes()
-        );
+        Number gameIdNum = com.jayway.jsonpath.JsonPath.read(create.getResponse().getContentAsString(), "$.id");
+        long gameId = gameIdNum.longValue();
 
-        mvc.perform(multipart("/admin/games/import")
-                        .file(file)
-                        .param("userId", String.valueOf(userId)))
-                .andExpect(status().isForbidden())
-                .andExpect(content().string("L'utilisateur doit etre admin pour importer des jeux."));
-    }
+        mvc.perform(put("/games/" + gameId + "/accept"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("accepted"));
 
-    @Test
-    void importGames_withInvalidCsv_returns400() throws Exception {
-        long adminId = createUser("admin", "admin@example.com", true);
-        MockMultipartFile file = new MockMultipartFile(
-                "file",
-                "games.csv",
-                "text/csv",
-                (
-                        "name,price,description,release_date,img_url,editor,genre,status\n" +
-                        "\"Broken\",oops,\"Desc\",2020-03-20,https://example.com/broken.jpg,studio,action,accepted\n"
-                ).getBytes()
-        );
+        mvc.perform(put("/games/" + gameId + "/rejected"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(gameId))
+                .andExpect(jsonPath("$.status").value("accepted"));
 
-        mvc.perform(multipart("/admin/games/import")
-                        .file(file)
-                        .param("userId", String.valueOf(adminId)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Prix invalide: oops"));
+        mvc.perform(get("/games/" + gameId))
+                .andExpect(status().isNotFound());
+
+        mvc.perform(get("/games"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
     }
 
     private long createUser(String username, String email, boolean isAdmin) throws Exception {

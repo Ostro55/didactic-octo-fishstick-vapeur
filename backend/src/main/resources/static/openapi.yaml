@@ -3,27 +3,28 @@ info:
   title: back-work API
   version: 0.0.1-SNAPSHOT
   description: |
-    Documentation OpenAPI generee a partir des controllers detectes dans le projet.
+    Documentation OpenAPI alignee sur les controllers Spring actuellement exposes.
 servers:
   - url: http://localhost:8080
 
 paths:
   /games:
     get:
-      summary: Lister les jeux (avec filtres optionnels)
+      summary: Lister les jeux
+      description: Retourne tous les jeux ou un sous-ensemble filtre par nom, genre et intervalle de prix.
       parameters:
         - name: name
           in: query
           required: false
           schema:
             type: string
-          description: Filtrer par nom (egalite, insensitive case)
+          description: Filtre par nom.
         - name: genre
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/GameGenre"
-          description: Filtrer si le jeu contient ce genre
+            type: string
+          description: Filtre par genre. Le filtre est traite en ignorant la casse.
         - name: minPrice
           in: query
           required: false
@@ -31,7 +32,7 @@ paths:
             type: integer
             format: int64
             minimum: 0
-          description: Prix minimum inclus
+          description: Prix minimum inclus.
         - name: maxPrice
           in: query
           required: false
@@ -39,10 +40,10 @@ paths:
             type: integer
             format: int64
             minimum: 0
-          description: Prix maximum inclus
+          description: Prix maximum inclus.
       responses:
         "200":
-          description: Liste de jeux
+          description: Liste de jeux.
           content:
             application/json:
               schema:
@@ -51,6 +52,7 @@ paths:
                   $ref: "#/components/schemas/Game"
     post:
       summary: Creer un jeu
+      description: Cree un jeu. Si `userId` est fourni, le statut est derive du role de l'utilisateur.
       parameters:
         - name: userId
           in: query
@@ -58,7 +60,7 @@ paths:
           schema:
             type: integer
             format: int64
-          description: Id de l'utilisateur appelant (admin => accepted, sinon pending)
+          description: Identifiant de l'utilisateur auteur de la soumission.
       requestBody:
         required: true
         content:
@@ -67,18 +69,19 @@ paths:
               $ref: "#/components/schemas/GameCreate"
       responses:
         "201":
-          description: Jeu cree
+          description: Jeu cree.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Game"
-        "500":
-          description: Erreur interne
+        "404":
+          description: `userId` fourni mais utilisateur introuvable.
     delete:
-      summary: Purger les jeux (games + tables de jointure)
+      summary: Purger les jeux
+      description: Supprime tous les jeux et les tables de jointure associees.
       responses:
         "204":
-          description: Purge effectuee
+          description: Purge effectuee.
 
   /games/{id}:
     get:
@@ -92,63 +95,68 @@ paths:
             format: int64
       responses:
         "200":
-          description: Jeu
+          description: Jeu trouve.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Game"
-        "500":
-          description: Erreur interne
+        "404":
+          description: Jeu introuvable.
 
-  /admin/games/import:
-    post:
-      summary: Importer un CSV de jeux en tant qu'admin
+  /games/{id}/accept:
+    put:
+      summary: Accepter un jeu
+      description: Force le statut du jeu a `accepted`.
       parameters:
-        - name: userId
-          in: query
+        - name: id
+          in: path
           required: true
           schema:
             type: integer
             format: int64
-          description: Id de l'utilisateur admin qui declenche l'import
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              required:
-                - file
-              properties:
-                file:
-                  type: string
-                  format: binary
       responses:
-        "201":
-          description: Jeux importes
+        "200":
+          description: Jeu accepte.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameImportResponse"
-        "400":
-          description: CSV invalide
-        "403":
-          description: Utilisateur non admin
+                $ref: "#/components/schemas/Game"
         "404":
-          description: Utilisateur introuvable
+          description: Jeu introuvable.
+
+  /games/{id}/rejected:
+    put:
+      summary: Rejeter un jeu
+      description: Rejet definitif du jeu avec suppression en base de donnees.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Jeu rejete puis supprime. Le corps retourne la derniere representation connue avant suppression.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "404":
+          description: Jeu introuvable.
 
   /users:
     get:
       summary: Lister les utilisateurs
       responses:
         "200":
-          description: Liste d'utilisateurs
+          description: Liste d'utilisateurs.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: "#/components/schemas/UserResponse"
     post:
       summary: Creer un utilisateur
       requestBody:
@@ -159,18 +167,19 @@ paths:
               $ref: "#/components/schemas/UserCreate"
       responses:
         "201":
-          description: Utilisateur cree
+          description: Utilisateur cree.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/UserResponse"
         "500":
-          description: Erreur interne
+          description: Erreur interne lors de la creation.
     delete:
-      summary: Purger les utilisateurs (users + table de jointure)
+      summary: Purger les utilisateurs
+      description: Supprime tous les utilisateurs et les liaisons vers les jeux recommandes.
       responses:
         "204":
-          description: Purge effectuee
+          description: Purge effectuee.
 
   /users/{id}:
     get:
@@ -184,15 +193,16 @@ paths:
             format: int64
       responses:
         "200":
-          description: Utilisateur
+          description: Utilisateur trouve.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "500":
-          description: Erreur interne
+                $ref: "#/components/schemas/UserResponse"
+        "404":
+          description: Utilisateur introuvable.
     put:
       summary: Mettre a jour un utilisateur
+      description: Met a jour username, email, isAdmin et recommendedGames. Le mot de passe envoye est ignore par le service.
       parameters:
         - name: id
           in: path
@@ -208,13 +218,13 @@ paths:
               $ref: "#/components/schemas/UserUpdate"
       responses:
         "200":
-          description: Utilisateur mis a jour
+          description: Utilisateur mis a jour.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "500":
-          description: Erreur interne
+                $ref: "#/components/schemas/UserResponse"
+        "404":
+          description: Utilisateur introuvable.
     delete:
       summary: Supprimer un utilisateur par id
       parameters:
@@ -226,31 +236,33 @@ paths:
             format: int64
       responses:
         "200":
-          description: Utilisateur supprime
+          description: Utilisateur supprime.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "500":
-          description: Erreur interne
+                $ref: "#/components/schemas/UserResponse"
+        "404":
+          description: Utilisateur introuvable.
+
   /users/login:
     post:
-      summary: Login as a user
+      summary: Authentifier un utilisateur
+      description: Verifie un couple email/mot de passe et retourne l'utilisateur sans le mot de passe.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserCreate"
+              $ref: "#/components/schemas/UserLogin"
       responses:
         "200":
-          description: Return logged user
+          description: Utilisateur authentifie.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/UserResponse"
         "404":
-          description: Not Found user
+          description: Utilisateur introuvable ou credentials invalides.
 
 components:
   schemas:
@@ -262,32 +274,33 @@ components:
           format: int64
         name:
           type: string
-        status:
-          type: string
-          description: Statut du jeu (ex: pending, accepted)
         price:
           type: integer
           format: int64
           nullable: true
-        genre:
-          type: array
-          items:
-            $ref: "#/components/schemas/GameGenre"
-          uniqueItems: true
+        description:
+          type: string
           nullable: true
-        makingTime:
-    GameImportResponse:
-      type: object
-      properties:
-        importedCount:
-          type: integer
-        games:
-          type: array
-          items:
-            $ref: "#/components/schemas/Game"
+        release_date:
           type: string
           format: date-time
           nullable: true
+        img_url:
+          type: string
+          nullable: true
+        editor:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+          description: Statut fonctionnel du jeu, par exemple `pending` ou `accepted`.
+        genre:
+          type: array
+          nullable: true
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/GameGenre"
       required:
         - name
 
@@ -296,28 +309,35 @@ components:
       properties:
         name:
           type: string
-        status:
-          type: string
-          description: Ignore par /games/save (derive de l'utilisateur)
         price:
           type: integer
           format: int64
           nullable: true
-        genre:
-          type: array
-          items:
-            $ref: "#/components/schemas/GameGenre"
-          uniqueItems: true
+        description:
+          type: string
           nullable: true
-        makingTime:
+        release_date:
           type: string
           format: date-time
           nullable: true
-        description:
+        img_url:
           type: string
+          nullable: true
+        editor:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+          description: Peut etre ecrase par le backend si `userId` est fourni.
+        genre:
+          type: array
+          nullable: true
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/GameGenre"
       required:
         - name
-        - price
 
     GameGenre:
       type: string
@@ -329,7 +349,7 @@ components:
         - multiplayer
         - singleplayer
 
-    User:
+    UserResponse:
       type: object
       properties:
         id:
@@ -337,80 +357,70 @@ components:
           format: int64
         username:
           type: string
-        email:
-          type: string
         isAdmin:
           type: boolean
-        recommendedGames:
-          type: array
-          items:
-            $ref: "#/components/schemas/Game"
-          uniqueItems: true
-          nullable: true
-      required:
-        - username
-        - email
-        - isAdmin
-        - password
-
-    UserLogin:
-      type: object
-      properties:
         email:
           type: string
-        password:
-          type: string
+        recommendedGames:
+          type: array
+          nullable: true
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/Game"
       required:
+        - id
+        - username
+        - isAdmin
         - email
-        - password
+        - recommendedGames
 
     UserCreate:
       type: object
       properties:
         username:
           type: string
-        email:
+        password:
           type: string
         isAdmin:
           type: boolean
-        password:
+        email:
           type: string
         recommendedGames:
           type: array
+          nullable: true
+          uniqueItems: true
           items:
             $ref: "#/components/schemas/Game"
-          uniqueItems: true
-          nullable: true
       required:
         - username
-        - email
-        - isAdmin
         - password
+        - isAdmin
+        - email
 
     UserUpdate:
       type: object
       properties:
         username:
           type: string
-        email:
+        password:
           type: string
+          description: Champ accepte par l'endpoint mais ignore par le service de mise a jour.
         isAdmin:
           type: boolean
-        password:
+        email:
           type: string
         recommendedGames:
           type: array
+          nullable: true
+          uniqueItems: true
           items:
             $ref: "#/components/schemas/Game"
-          uniqueItems: true
-          nullable: true
       required:
         - username
-        - email
         - isAdmin
-        - password
+        - email
 
-    UserRequestDto:
+    UserLogin:
       type: object
       properties:
         email:
