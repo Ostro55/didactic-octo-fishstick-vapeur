@@ -64,14 +64,14 @@ public class GameService implements IGameService {
 
     @Override
     public Optional<Game> addGame(Game newGame, Long userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) return Optional.empty();
+        if (userId != null) {
+            Optional<User> userOpt = userRepository.findById(userId);
+            if (userOpt.isEmpty()) return Optional.empty();
 
-        User actor = userOpt.get();
-        // Never trust client-provided status: derive it from the calling user.
-        newGame.setStatus(actor.isAdmin() ? "accepted" : "pending");
-        gameRepository.save(newGame);
-        auditEventPublisher.publish(AuditEvents.user(
+            User actor = userOpt.get();
+            // Never trust client-provided status: derive it from the calling user.
+            newGame.setStatus(actor.isAdmin() ? "accepted" : "pending");
+            auditEventPublisher.publish(AuditEvents.user(
                 actor.getId() == null ? null : actor.getId().toString(),
                 actor.getUsername(),
                 actor.isAdmin(),
@@ -82,7 +82,23 @@ public class GameService implements IGameService {
                         "name", newGame.getName(),
                         "status", newGame.getStatus()
                 )
-        ));
+            ));
+        } else {
+            auditEventPublisher.publish(AuditEvents.user(
+                    null,
+                    "UNKNOWN",
+                    false,
+                    AuditAction.GAME_SUBMITTED,
+                    AuditResourceType.GAME,
+                    newGame.getId() == null ? null : newGame.getId().toString(),
+                    Map.of(
+                            "name", newGame.getName(),
+                            "status", newGame.getStatus()
+                    )
+            ));
+        }
+
+        gameRepository.save(newGame);
         return Optional.of(newGame);
     }
 

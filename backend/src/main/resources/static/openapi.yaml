@@ -51,6 +51,14 @@ paths:
                   $ref: "#/components/schemas/Game"
     post:
       summary: Creer un jeu
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+          description: Id de l'utilisateur appelant (admin => accepted, sinon pending)
       requestBody:
         required: true
         content:
@@ -71,33 +79,6 @@ paths:
       responses:
         "204":
           description: Purge effectuee
-
-  /games/save:
-    post:
-      summary: Creer un jeu (statut derive de l'utilisateur)
-      parameters:
-        - name: userId
-          in: query
-          required: true
-          schema:
-            type: integer
-            format: int64
-          description: Id de l'utilisateur appelant (admin => accepted, sinon pending)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GameCreate"
-      responses:
-        "201":
-          description: Jeu cree
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Game"
-        "404":
-          description: Utilisateur introuvable
 
   /games/{id}:
     get:

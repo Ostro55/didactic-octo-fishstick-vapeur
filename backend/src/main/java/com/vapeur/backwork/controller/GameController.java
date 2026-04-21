@@ -1,17 +1,13 @@
 package com.vapeur.backwork.controller;
 
-import com.vapeur.backwork.dto.GameImportResponseDto;
 import com.vapeur.backwork.entity.Game;
 import com.vapeur.backwork.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -35,15 +31,14 @@ public class GameController {
         return new ResponseEntity<>(allGames, HttpStatus.OK);
     }
 
-    @PostMapping("games")
-    public ResponseEntity<Game> save(@RequestBody Game newGame) {
-        Optional<Game> game = gameService.addGame(newGame);
-        return game.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-    }
+//    @PostMapping("games")
+//    public ResponseEntity<Game> save(@RequestBody Game newGame) {
+//        Optional<Game> game = gameService.addGame(newGame);
+//        return game.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+//    }
 
-    @PostMapping("games/save")
-    public ResponseEntity<Game> saveWithUser(@RequestParam("userId") Long userId, @RequestBody Game newGame) {
-        // The effective status is derived in the service from the calling user role.
+    @PostMapping("games")
+    public ResponseEntity<Game> saveWithUser(@RequestParam(required = false) Long userId, @RequestBody Game newGame) {
         Optional<Game> game = gameService.addGame(newGame, userId);
         if (game.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(game.get(), HttpStatus.CREATED);
@@ -63,26 +58,7 @@ public class GameController {
 
     @PutMapping("games/{id}/accept")
     public ResponseEntity<Game> acceptGame(@PathVariable("id") Long id) {
-        // Keep the current API contract: missing game currently maps to 500 here.
         Optional<Game> game = gameService.acceptGame(id);
         return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-    }
-
-    @PostMapping(path = "admin/games/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> importGames(
-            @RequestParam("userId") Long userId,
-            @RequestParam("file") MultipartFile file
-    ) {
-        try {
-            List<Game> importedGames = gameService.importGamesFromCsv(file, userId);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new GameImportResponseDto(importedGames.size(), importedGames));
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 }
