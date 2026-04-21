@@ -186,13 +186,6 @@ curl -X POST http://localhost:8080/users/login \
 - `isAdmin`
 - `recommendedGames`
 
-## Limites actuelles
-
-- aucun mecanisme d'authentification JWT ou session n'est implemente
-- le login compare le mot de passe en clair
-- certains endpoints renvoient actuellement `500` quand la ressource n'existe pas au lieu de `404`
-- le filtrage des jeux est realise en memoire apres lecture complete en base
-
 ## Documentation developpeur
 
 Le guide de reprise technique se trouve dans [docs/DEVELOPER_GUIDE.md](/home/epita/dev/projFullStack/didactic-octo-fishstick-vapeur/backend/docs/DEVELOPER_GUIDE.md).
