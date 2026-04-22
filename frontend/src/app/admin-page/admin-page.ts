@@ -79,6 +79,7 @@ export class AdminPage {
         this.api.searchParams_request(this.imagelistv2);
         this.closeOverlay();
       });
+
     }
   }
 
