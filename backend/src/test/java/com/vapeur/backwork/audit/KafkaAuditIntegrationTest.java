@@ -42,7 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "audit.topic=audit-events",
         "audit.kafka.enabled=true",
-        "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}"
+        "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
+        "spring.datasource.url=jdbc:h2:mem:kafkatest;DB_CLOSE_DELAY=-1"
 })
 @AutoConfigureMockMvc
 @EmbeddedKafka(partitions = 1, topics = {"audit-events"})

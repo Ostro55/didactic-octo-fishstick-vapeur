@@ -1,17 +1,13 @@
-// ***********************************************************
-// This example support/e2e.ts is processed and
-// loaded automatically before your test files.
-//
-// This is a great place to put global configuration and
-// behavior that modifies Cypress.
-//
-// You can change the location of this file or turn off
-// automatically serving support files with the
-// 'supportFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/configuration
-// ***********************************************************
+// cypress/support/e2e.ts
+// Chargé automatiquement avant chaque fichier de test E2E
 
-// Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
+
+// Désactiver les erreurs non capturées qui viendraient des libs tierces
+Cypress.on('uncaught:exception', (err) => {
+  // Ignorer les erreurs RxJS de souscription hors Angular Zone
+  if (err.message.includes('ResizeObserver') || err.message.includes('zone')) {
+    return false;
+  }
+  return true;
+});
