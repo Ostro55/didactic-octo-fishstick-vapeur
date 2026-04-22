@@ -1,6 +1,7 @@
 package com.vapeur.backwork.service;
 
 import com.vapeur.backwork.entity.Game;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,4 +32,7 @@ public interface IGameService {
     Optional<Game> acceptGame(Long id);
 
     Optional<Game> rejectGame(Long id);
+
+    List<Game> importGamesFromCsv(MultipartFile file, Long userId);
+
 }
