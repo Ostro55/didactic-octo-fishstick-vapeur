@@ -1,0 +1,4 @@
+name,price,description,release_date,img_url,editor,genre,status
+"Doom Eternal",5999,"Fast-paced FPS in hell",2020-03-20,https://example.com/doom-eternal.jpg,id Software,action|horror,accepted
+"Stardew Valley",1499,"Relaxing farming and life sim",2016-02-26,https://example.com/stardew-valley.jpg,ConcernedApe,romance|singleplayer,accepted
+"Left 4 Dead 2",999,"Co-op zombie survival shooter",2009-11-17,https://example.com/left4dead2.jpg,Valve,action|horror|multiplayer,accepted

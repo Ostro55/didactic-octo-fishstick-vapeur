@@ -8,6 +8,7 @@ import com.vapeur.backwork.audit.AuditResourceType;
 import com.vapeur.backwork.entity.User;
 import com.vapeur.backwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final AuditEventPublisher auditEventPublisher;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAll() {
@@ -35,6 +37,7 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<User> addUser(User newUser) {
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userRepository.save(newUser);
         auditEventPublisher.publish(AuditEvents.system(
                 AuditAction.USER_CREATED,
@@ -55,6 +58,9 @@ public class UserService implements IUserService {
         existing.setUsername(updatedUser.getUsername());
         existing.setEmail(updatedUser.getEmail());
         existing.setAdmin(updatedUser.isAdmin());
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+            existing.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
         existing.setRecommendedGames(updatedUser.getRecommendedGames() == null ? new HashSet<>() : updatedUser.getRecommendedGames());
         userRepository.save(existing);
         auditEventPublisher.publish(AuditEvents.system(
@@ -89,15 +95,28 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public Optional<User> login(UserRequestDto userRequestDto) {
-        var allUser = userRepository.findAll();
-        allUser = allUser.stream().filter(x -> x.getEmail().equals(userRequestDto.email()) && x.getPassword().equals(userRequestDto.password())).toList();
-
-        if (allUser.isEmpty()) {
+        Optional<User> userOpt = userRepository.findByEmail(userRequestDto.email());
+        if (userOpt.isEmpty()) {
             return Optional.empty();
-        } else {
-            return Optional.of(allUser.get(0));
         }
+
+        User user = userOpt.get();
+        String storedPassword = user.getPassword();
+        String rawPassword = userRequestDto.password();
+
+        if (storedPassword != null && passwordEncoder.matches(rawPassword, storedPassword)) {
+            return Optional.of(user);
+        }
+
+        if (storedPassword != null && storedPassword.equals(rawPassword)) {
+            user.setPassword(passwordEncoder.encode(rawPassword));
+            userRepository.save(user);
+            return Optional.of(user);
+        }
+
+        return Optional.empty();
     }
 
     @Override

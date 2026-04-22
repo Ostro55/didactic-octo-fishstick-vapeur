@@ -14,7 +14,7 @@ COPY src ./src
 RUN ./mvnw package -B -DskipTests --no-transfer-progress
 
 # Stage 2 — Image finale légère
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 

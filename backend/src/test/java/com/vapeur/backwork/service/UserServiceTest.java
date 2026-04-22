@@ -10,6 +10,7 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -34,6 +35,9 @@ class UserServiceTest {
     @Mock
     AuditEventPublisher auditEventPublisher;
 
+    @Mock
+    PasswordEncoder passwordEncoder;
+
     @InjectMocks
     UserService userService;
 
@@ -45,11 +49,14 @@ class UserServiceTest {
         u.setEmail("alice@example.com");
         u.setAdmin(false);
 
+        when(passwordEncoder.encode("pw")).thenReturn("hashed-pw");
         when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
 
         Optional<User> out = userService.addUser(u);
         assertTrue(out.isPresent());
         assertSame(u, out.get());
+        assertEquals("hashed-pw", u.getPassword());
+        verify(passwordEncoder).encode("pw");
         verify(userRepository).save(u);
         verify(auditEventPublisher).publish(any());
     }
@@ -72,11 +79,11 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUser_whenPresent_updatesFields_andNullRecommendedGamesBecomesEmptySet() {
+    void updateUser_whenPresent_updatesFields_hashesPassword_andNullRecommendedGamesBecomesEmptySet() {
         User existing = new User();
         existing.setId(1L);
         existing.setUsername("old");
-        existing.setPassword("pw");
+        existing.setPassword("old-hash");
         existing.setEmail("old@example.com");
         existing.setAdmin(false);
         existing.setRecommendedGames(Set.of());
@@ -88,6 +95,7 @@ class UserServiceTest {
         updated.setAdmin(true);
         updated.setRecommendedGames(null);
 
+        when(passwordEncoder.encode("ignored")).thenReturn("new-hash");
         when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -96,11 +104,13 @@ class UserServiceTest {
         assertSame(existing, out.get());
         assertEquals("new", existing.getUsername());
         assertEquals("new@example.com", existing.getEmail());
+        assertEquals("new-hash", existing.getPassword());
         assertTrue(existing.isAdmin());
         assertNotNull(existing.getRecommendedGames());
         assertTrue(existing.getRecommendedGames().isEmpty());
 
         verify(userRepository).findById(1L);
+        verify(passwordEncoder).encode("ignored");
         verify(userRepository).save(existing);
         verify(auditEventPublisher).publish(any());
     }
@@ -126,11 +136,13 @@ class UserServiceTest {
         updated.setAdmin(true);
         updated.setRecommendedGames(rec);
 
+        when(passwordEncoder.encode("pw")).thenReturn("hashed-pw");
         when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
 
         userService.updateUser(1L, updated);
         assertSame(rec, existing.getRecommendedGames());
+        assertEquals("hashed-pw", existing.getPassword());
     }
 
     @Test
@@ -175,5 +187,59 @@ class UserServiceTest {
         order.verify(userRepository).deleteAllRecommendedGameLinks();
         order.verify(userRepository).deleteAllUsers();
         verify(auditEventPublisher).publish(any());
+    }
+
+    @Test
+    void login_withMatchingHash_returnsUser() {
+        User existing = new User();
+        existing.setEmail("alice@example.com");
+        existing.setPassword("hashed-pw");
+
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(Optional.of(existing));
+        when(passwordEncoder.matches("pw", "hashed-pw")).thenReturn(true);
+
+        Optional<User> out = userService.login(new com.vapeur.backwork.RequestDto.UserRequestDto("alice@example.com", "pw"));
+
+        assertTrue(out.isPresent());
+        assertSame(existing, out.get());
+        verify(userRepository).findByEmail("alice@example.com");
+        verify(passwordEncoder).matches("pw", "hashed-pw");
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void login_withLegacyPlaintextPassword_migratesToHash() {
+        User existing = new User();
+        existing.setEmail("alice@example.com");
+        existing.setPassword("pw");
+
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(Optional.of(existing));
+        when(passwordEncoder.matches("pw", "pw")).thenReturn(false);
+        when(passwordEncoder.encode("pw")).thenReturn("hashed-pw");
+        when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Optional<User> out = userService.login(new com.vapeur.backwork.RequestDto.UserRequestDto("alice@example.com", "pw"));
+
+        assertTrue(out.isPresent());
+        assertEquals("hashed-pw", existing.getPassword());
+        verify(passwordEncoder).matches("pw", "pw");
+        verify(passwordEncoder).encode("pw");
+        verify(userRepository).save(existing);
+    }
+
+    @Test
+    void login_withWrongPassword_returnsEmpty() {
+        User existing = new User();
+        existing.setEmail("alice@example.com");
+        existing.setPassword("hashed-pw");
+
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(Optional.of(existing));
+        when(passwordEncoder.matches("wrong", "hashed-pw")).thenReturn(false);
+
+        Optional<User> out = userService.login(new com.vapeur.backwork.RequestDto.UserRequestDto("alice@example.com", "wrong"));
+
+        assertTrue(out.isEmpty());
+        verify(userRepository, never()).save(any(User.class));
+        verify(passwordEncoder, never()).encode(any());
     }
 }
