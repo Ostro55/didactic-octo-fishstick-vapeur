@@ -1,13 +1,17 @@
 package com.vapeur.backwork.controller;
 
+import com.vapeur.backwork.dto.GameImportResponseDto;
 import com.vapeur.backwork.entity.Game;
 import com.vapeur.backwork.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -60,5 +64,23 @@ public class GameController {
     public ResponseEntity<Game> rejectGame(@PathVariable("id") Long id) {
         Optional<Game> game = gameService.rejectGame(id);
         return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping(path = "admin/games/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> importGames(
+            @RequestParam("userId") Long userId,
+            @RequestParam("file") MultipartFile file
+    ) {
+        try {
+            List<Game> importedGames = gameService.importGamesFromCsv(file, userId);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new GameImportResponseDto(importedGames.size(), importedGames));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
