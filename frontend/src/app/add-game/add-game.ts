@@ -4,6 +4,8 @@ import {GameRequest, Photo} from "../../PhotoModel";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Router} from "@angular/router";
 import {HomeButton} from "../home-button/home-button";
+import {UserConnectd} from "../utilisateur";
+import {AuthService} from "../auth-service";
 
 @Component({
   selector: 'app-add-game',
@@ -26,6 +28,7 @@ export class AddGame {
     "romance",
     "multiplayer"
   ];
+  public user: AuthService = inject(AuthService)
 
   public    price:      number = 0;
   public genre:      string[] = [];
@@ -50,7 +53,7 @@ export class AddGame {
 
   public addgame(){
     let formValues = this.theForm.getRawValue();
-    var body:GameRequest = new GameRequest(formValues.name,formValues.price,this.genre,new Date(Date.now()))
+    var body:GameRequest = new GameRequest(formValues.name,formValues.price,this.genre,new Date(Date.now()),this.user.userInfo?.id)
     console.log(body)
     this.api.add_game(body)
     this.router.navigateByUrl('/');

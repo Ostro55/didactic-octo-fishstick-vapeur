@@ -36,17 +36,20 @@ export class GameRequest {
     public price: number;
     public genre: string[];
     public makingTime: Date;
+    public userId: string | undefined;
 
     constructor(
         name: string = "",
         price: number = 1,
         genre: string[] = [],
-        makingTime: Date = new Date(Date.now())
+        makingTime: Date = new Date(Date.now()),
+        id:string | undefined
     ) {
         this.name = name;
         this.price = price;
         this.genre = genre;
         this.makingTime = makingTime;
+        this.userId = id;
     }
 
 }
@@ -74,7 +77,7 @@ export class PhotoSmall {
     name: string = "";
     price: number = 0;
     release_date: string = "";
-    status: string = " ";
+    status: string = "";
     makingTime: string = "2026-03-26T14:06:44.063Z";
     public image: BehaviorSubject<FlickrPhotoResponse  | undefined> = new BehaviorSubject<FlickrPhotoResponse | undefined>( undefined);
 

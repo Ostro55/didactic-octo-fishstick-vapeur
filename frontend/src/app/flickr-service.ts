@@ -75,7 +75,7 @@ class FlickrService {
                 responseType: 'json'
             }, ).subscribe((buffer) => {
             console.log(buffer);
-            var imagelist: PhotoSmall[] = buffer.map(a => {
+            var imagelist: PhotoSmall[] = buffer.filter(a => a.status == "accepted").map(a => {
                 var v =  this.find_url(a);
 
                 v.name = a.name;
@@ -85,7 +85,6 @@ class FlickrService {
                 v.description = a.description == null ? "" : a.description;
                 v.editor = a.editor == null ? "" : a.editor;
                 v.img_url = a.img_url == null ? "" : a.img_url;
-
                 return v;
             });
             console.log(imagelist);
