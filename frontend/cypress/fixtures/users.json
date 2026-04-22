@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "username": "alice",
+    "email": "alice@example.com",
+    "isAdmin": false,
+    "recommendedGames": []
+  },
+  {
+    "id": 2,
+    "username": "admin",
+    "email": "admin@example.com",
+    "isAdmin": true,
+    "recommendedGames": [
+      { "id": 1, "name": "Super Mario Bros", "price": 59.99, "genre": ["Platformer"], "makingTime": "1985-09-13" }
+    ]
+  }
+]

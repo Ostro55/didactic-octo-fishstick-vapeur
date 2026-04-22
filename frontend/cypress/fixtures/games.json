@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "Super Mario Bros",
+    "price": 59.99,
+    "genre": ["Platformer"],
+    "description": "A classic platformer game",
+    "editor": "Nintendo",
+    "img_url": "https://example.com/mario.jpg",
+    "release_date": "1985-09-13",
+    "status": "available"
+  },
+  {
+    "id": 2,
+    "name": "The Legend of Zelda",
+    "price": 49.99,
+    "genre": ["Adventure", "Action"],
+    "description": "An open world adventure",
+    "editor": "Nintendo",
+    "img_url": "https://example.com/zelda.jpg",
+    "release_date": "1986-02-21",
+    "status": "available"
+  },
+  {
+    "id": 3,
+    "name": "Cyberpunk 2077",
+    "price": 29.99,
+    "genre": ["RPG", "Action"],
+    "description": null,
+    "editor": "CD Projekt Red",
+    "img_url": null,
+    "release_date": "2020-12-10",
+    "status": "available"
+  }
+]
