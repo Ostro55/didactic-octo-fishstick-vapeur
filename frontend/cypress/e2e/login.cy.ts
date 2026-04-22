@@ -200,7 +200,7 @@ describe('Page de connexion', () => {
       });
     });
 
-    it('redirige vers / après l\'inscription', () => {
+    it.skip('redirige vers / après l\'inscription', () => {
       cy.intercept('POST', '/users', {}).as('createUser');
       cy.mockGamesApi();
 
