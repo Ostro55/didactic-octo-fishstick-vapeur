@@ -68,6 +68,7 @@ class FlickrService {
 
     public searchParams(params : Record<string, string | number | boolean | readonly (string | number | boolean)[]>, imagelistv2 : BehaviorSubject<PhotoSmall[]>)
     {
+        console.log(params)
         var res = this.http.get<Photo[]>(
             '/games'
             , {
@@ -232,11 +233,11 @@ class FlickrService {
     }
 
     public approve_game(id: number) {
-        return this.http.put(`/games/${id}/approve`, {});
+        return this.http.put(`/games/${id}/accept`, {});
     }
 
     public decline_game(id: number) {
-        return this.http.delete(`/games/${id}`);
+        return this.http.delete(`/games/${id}/rejected`);
     }
 
 }

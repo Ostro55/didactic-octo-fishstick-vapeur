@@ -66,19 +66,19 @@ export class AdminPage {
 
   approveGame() {
     if (this.selectedGame) {
-      /*this.api.approve_game(this.selectedGame.id).subscribe(() => {
+      this.api.approve_game(this.selectedGame.id).subscribe(() => {
         this.api.searchParams_request(this.imagelistv2);
         this.closeOverlay();
-      }); */
+      });
     }
   }
 
   declineGame() {
     if (this.selectedGame) {
-      /*this.api.decline_game(this.selectedGame.id).subscribe(() => {
+      this.api.decline_game(this.selectedGame.id).subscribe(() => {
         this.api.searchParams_request(this.imagelistv2);
         this.closeOverlay();
-      }); */
+      });
     }
   }
 

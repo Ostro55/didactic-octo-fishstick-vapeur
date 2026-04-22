@@ -32,7 +32,7 @@ export class HomePage {
 
   ngOnInit()
   {
-    this.api.search("the best",[],1,0,this.imagelistv2)
+    this.api.search("",[],-1,0,this.imagelistv2)
   }
 
   public ButtonAddgame()
