@@ -60,7 +60,7 @@ public class GameController {
         return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("games/{id}/rejected")
+    @DeleteMapping("games/{id}/rejected")
     public ResponseEntity<Game> rejectGame(@PathVariable("id") Long id) {
         Optional<Game> game = gameService.rejectGame(id);
         return game.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

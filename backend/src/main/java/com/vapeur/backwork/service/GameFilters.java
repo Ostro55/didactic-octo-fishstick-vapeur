@@ -19,7 +19,9 @@ final class GameFilters {
         var stream = games.stream();
 
         if (nameFilter != null) {
-            stream = stream.filter(g -> g.getName() != null && g.getName().equalsIgnoreCase(nameFilter));
+            String normalizedNameFilter = nameFilter.toLowerCase(Locale.ROOT);
+            stream = stream.filter(g -> g.getName() != null
+                    && g.getName().toLowerCase(Locale.ROOT).contains(normalizedNameFilter));
         }
         if (minPrice != null) {
             stream = stream.filter(g -> g.getPrice() != null && g.getPrice() >= minPrice);
