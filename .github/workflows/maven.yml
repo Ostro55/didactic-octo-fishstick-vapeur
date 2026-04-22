@@ -75,7 +75,7 @@ jobs:
         working-directory: backend
         run: |
           chmod +x mvnw
-          ./mvnw -B verify --no-transfer-progress -Dit.kafka.embedded=true
+          ./mvnw -B verify --no-transfer-progress
 
       - name: Upload rapports JaCoCo
         if: always()
