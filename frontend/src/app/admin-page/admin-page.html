@@ -16,6 +16,20 @@
     <div class="admin-grid">
 
         <div class="admin-card">
+            <h2>🎮 Jeux en attente</h2>
+            <div class="game-list">
+                @for (game of imagelistv2 | async; track game.id) {
+                    <div class="game-item" (click)="openOverlay(game)">
+                        <span>{{ game.name }}</span>
+                        <span class="game-id">#{{ game.id }}</span>
+                    </div>
+                } @empty {
+                    <p>Aucun jeu en attente d'approbation</p>
+                }
+            </div>
+        </div>
+
+        <div class="admin-card">
             <h2>🚫 Bannir un utilisateur</h2>
             <form (ngSubmit)="ban($event)">
                 <input type="text" id="userid" name="userid" placeholder="ID utilisateur à bannir">
@@ -34,3 +48,18 @@
     </div>
 
 </div>
+
+@if (showOverlay) {
+    <div class="overlay-backdrop" (click)="closeOverlay()">
+        <div class="overlay-content" (click)="$event.stopPropagation()">
+            <h2>Approuver le jeu ?</h2>
+            <p><strong>Nom :</strong> {{ selectedGame?.name }}</p>
+            <p><strong>Description :</strong> {{ selectedGame?.description }}</p>
+            <div class="overlay-actions">
+                <button class="success-btn" (click)="approveGame()">Approuver</button>
+                <button class="danger-btn" (click)="declineGame()">Refuser</button>
+                <button class="secondary-btn" (click)="closeOverlay()">Annuler</button>
+            </div>
+        </div>
+    </div>
+}

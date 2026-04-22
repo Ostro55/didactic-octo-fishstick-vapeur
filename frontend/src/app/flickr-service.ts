@@ -94,7 +94,36 @@ class FlickrService {
         });
     }
 
-  public find_url(photo :Photo)
+    public searchParams_request( imagelistv2 : BehaviorSubject<PhotoSmall[]>)
+    {
+        var res = this.http.get<Photo[]>(
+            '/games'
+            , {
+                responseType: 'json'
+            }, ).subscribe((buffer) => {
+            console.log(buffer);
+            var imagelist: PhotoSmall[] = buffer.filter(a => a.status != "accepted").map(a => {
+                var v =  this.find_url(a);
+
+                v.name = a.name;
+                v.id = a.id;
+                v.genre = a.genre;
+                v.price = a.price;
+                v.description = a.description == null ? "" : a.description;
+                v.editor = a.editor == null ? "" : a.editor;
+                v.img_url = a.img_url == null ? "" : a.img_url;
+                return v;
+            });
+            console.log(imagelist);
+
+            //this.imagelistv2.next(imagelist);
+            imagelistv2.next(imagelist);
+        });
+    }
+
+
+
+    public find_url(photo :Photo)
   {
     var v =  new PhotoSmall();
 
@@ -200,6 +229,14 @@ class FlickrService {
 
 
 
+    }
+
+    public approve_game(id: number) {
+        return this.http.put(`/games/${id}/approve`, {});
+    }
+
+    public decline_game(id: number) {
+        return this.http.delete(`/games/${id}`);
     }
 
 }
