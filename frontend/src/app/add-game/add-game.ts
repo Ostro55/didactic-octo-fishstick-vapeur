@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import FlickrService from "../flickr-service";
-import {GameRequest, Photo} from "../../PhotoModel";
+import {GameRequest, Game} from "../../GameModel";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Router} from "@angular/router";
 import {HomeButton} from "../home-button/home-button";

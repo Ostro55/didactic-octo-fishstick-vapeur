@@ -2,8 +2,8 @@ import {Component, inject} from '@angular/core';
 import {OverlayService} from "../overlay-service";
 import {AsyncPipe, NgOptimizedImage} from "@angular/common";
 import {BehaviorSubject} from "rxjs";
-import {Photo, PhotoSmall} from "../../PhotoModel";
-import {FlickrPhotoResponse} from "../../PhotoURL";
+import {Game, GameSmall} from "../../GameModel";
+import {FlickrPhotoResponse} from "../../GameURL";
 
 @Component({
   selector: 'app-overlay',

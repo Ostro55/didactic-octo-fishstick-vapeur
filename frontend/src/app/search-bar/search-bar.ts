@@ -3,7 +3,7 @@ import FlickrService from "../flickr-service";
 import {FormsModule} from "@angular/forms";
 import { ActivatedRoute } from '@angular/router'
 import {BehaviorSubject} from "rxjs";
-import {PhotoSmall} from "../../PhotoModel";
+import {GameSmall} from "../../GameModel";
 
 @Component({
   selector: 'app-search-bar',
@@ -31,7 +31,7 @@ export class SearchBar {
 
   constructor(private activateRoute: ActivatedRoute){}
 
-  @Input() imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
+  @Input() imagelistv2 : BehaviorSubject<GameSmall[]> = new BehaviorSubject<GameSmall[]>([]);
 
 
 

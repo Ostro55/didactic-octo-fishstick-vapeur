@@ -5,7 +5,7 @@ import {SearchBar} from "../search-bar/search-bar";
 import {ImageList} from "../image-list/image-list";
 import {NextPage} from "../next-page/next-page";
 import {BehaviorSubject} from "rxjs";
-import {PhotoSmall} from "../../PhotoModel";
+import {GameSmall} from "../../GameModel";
 import FlickrService from "../flickr-service";
 import {AuthService} from "../auth-service";
 import {Router} from "@angular/router";
@@ -26,7 +26,7 @@ export class HomePage {
   protected api = inject(FlickrService);
   public authService: AuthService = inject(AuthService)
 
-  imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
+  imagelistv2 : BehaviorSubject<GameSmall[]> = new BehaviorSubject<GameSmall[]>([]);
   constructor(
       private router: Router, private formBuilder: FormBuilder ) { }
 

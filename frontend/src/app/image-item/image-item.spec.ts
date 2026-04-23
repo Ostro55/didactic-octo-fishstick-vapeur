@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ImageItem } from './image-item';
-import {PhotoSmall} from "../../PhotoModel";
+import {GameSmall} from "../../GameModel";
 
 describe('ImageItem', () => {
   let component: ImageItem;

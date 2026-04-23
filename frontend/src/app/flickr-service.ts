@@ -2,8 +2,8 @@ import {ApplicationConfig, inject, Injectable, signal, Signal} from '@angular/co
 import {BehaviorSubject, firstValueFrom} from "rxjs";
 import {HttpClient, HttpParams, provideHttpClient, withFetch} from "@angular/common/http";
 import {scheduleReadableStreamLike} from "rxjs/internal/scheduled/scheduleReadableStreamLike";
-import {ApiResponse, GameRequest, LoginUser, Photo, PhotoSmall, PhotosPage} from "../PhotoModel";
-import {CreateUser, FlickrPhotoResponse, PhotoInfo, RecommendedGame, UsersResponse} from "../PhotoURL";
+import {ApiResponse, GameRequest, LoginUser, Game, GameSmall, GamePage} from "../GameModel";
+import {CreateUser, FlickrPhotoResponse, PhotoInfo, RecommendedGame, UsersResponse} from "../GameURL";
 import {AddGame} from "./add-game/add-game";
 import {Utilisateur} from "./utilisateur";
 
@@ -13,12 +13,7 @@ import {Utilisateur} from "./utilisateur";
 })
 
 class FlickrService {
-
-    url = "http://localhost:8080";
-
   private http = inject(HttpClient);
-
-  api_key = "9bece75e0eea9e622a75fa8a0eb1e6a2";
 
   public size :[string,string][] = [["","url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o"],["petite","url_m,url_n"],["moyenne","url_z,url_c"],["grande","url_l"]];
 
@@ -27,16 +22,9 @@ class FlickrService {
   public lastcall  :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {};
 
 
-  public search(value : string,genre:string[],minprice : number,maxprice: number,  imagelistv2 : BehaviorSubject<PhotoSmall[]>){
+  public search(value : string,genre:string[],minprice : number,maxprice: number,  imagelistv2 : BehaviorSubject<GameSmall[]>){
+      //this part work perfectly
 
-
-      //https://serpapi.com/search.json?q=Apple&engine=google_images&ijn=0
-      //https://www.flickr.com/services/rest/?method=flickr.test.echo&name=value
-      /*
-          this.http.get('https://serpapi.com/search.json', {params: {q : value,engine:"google_images"} ,responseType: 'json'}, ).subscribe((buffer) => {
-            console.log('The image is ' + buffer + ' bytes large');
-          });
-       */
       //var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {}
       var params :  Record<string, string | number | boolean | readonly (string | number | boolean)[]> = {
 
@@ -59,24 +47,24 @@ class FlickrService {
       this.searchParams(params,imagelistv2);
   }
 
-    public searchChangePage(imagelistv2 : BehaviorSubject<PhotoSmall[]>)
+    public searchChangePage(imagelistv2 : BehaviorSubject<GameSmall[]>)
     {
         this.lastcall["page"] = this.page;
         this.searchParams(this.lastcall,imagelistv2);
     }
 
 
-    public searchParams(params : Record<string, string | number | boolean | readonly (string | number | boolean)[]>, imagelistv2 : BehaviorSubject<PhotoSmall[]>)
+    public searchParams(params : Record<string, string | number | boolean | readonly (string | number | boolean)[]>, imagelistv2 : BehaviorSubject<GameSmall[]>)
     {
         console.log(params)
-        var res = this.http.get<Photo[]>(
+        var res = this.http.get<Game[]>(
             '/games'
             , {
                 params : params,
                 responseType: 'json'
             }, ).subscribe((buffer) => {
             console.log(buffer);
-            var imagelist: PhotoSmall[] = buffer.filter(a => a.status == "accepted").map(a => {
+            var imagelist: GameSmall[] = buffer.filter(a => a.status == "accepted").map(a => {
                 var v =  this.find_url(a);
 
                 v.name = a.name;
@@ -95,15 +83,15 @@ class FlickrService {
         });
     }
 
-    public searchParams_request( imagelistv2 : BehaviorSubject<PhotoSmall[]>)
+    public searchParams_request( imagelistv2 : BehaviorSubject<GameSmall[]>)
     {
-        var res = this.http.get<Photo[]>(
+        var res = this.http.get<Game[]>(
             '/games'
             , {
                 responseType: 'json'
             }, ).subscribe((buffer) => {
             console.log(buffer);
-            var imagelist: PhotoSmall[] = buffer.filter(a => a.status != "accepted").map(a => {
+            var imagelist: GameSmall[] = buffer.filter(a => a.status != "accepted").map(a => {
                 var v =  this.find_url(a);
 
                 v.name = a.name;
@@ -124,24 +112,15 @@ class FlickrService {
 
 
 
-    public find_url(photo :Photo)
+    public find_url(photo :Game)
   {
-    var v =  new PhotoSmall();
+    var v =  new GameSmall();
 
     return v;
   }
 
   public get_game(id : number, data : BehaviorSubject<FlickrPhotoResponse  | undefined>)
   {
-    //https://www.flickr.com/services/rest/?
-    // method=flickr.photos.getInfo&
-    // api_key=a9ea63761e96e6b316d83d062cce5726&
-    // photo_id=54993765443&
-    // format=json&
-    // nojsoncallback=1&
-    // auth_token=72157720960825727-a8bc48f55acbafc8&
-    // api_sig=89dc8eee7392a8133e416994a773f9f0
-    //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
     var res = this.http.get<FlickrPhotoResponse>(
         '/games/' + id
         , {
@@ -160,17 +139,6 @@ class FlickrService {
 
     public add_game(game: GameRequest)
     {
-        //https://www.flickr.com/services/rest/?
-        // method=flickr.photos.getInfo&
-        // api_key=a9ea63761e96e6b316d83d062cce5726&
-        // photo_id=54993765443&
-        // format=json&
-        // nojsoncallback=1&
-        // auth_token=72157720960825727-a8bc48f55acbafc8&
-        // api_sig=89dc8eee7392a8133e416994a773f9f0
-        //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
-
-
 
         var res = this.http.post(
             '/games',
@@ -181,19 +149,22 @@ class FlickrService {
     }
 
 
+    public ban_user(id:string)
+    {
+
+
+        var res = this.http.delete(
+            '/users/' + id
+        ).subscribe(() => {
+            console.log("ban user")
+        });
+    }
+
+
 
     public Login_User(data : BehaviorSubject<UsersResponse  | undefined>,login:Utilisateur)
     {
-        //https://www.flickr.com/services/rest/?
-        // method=flickr.photos.getInfo&
-        // api_key=a9ea63761e96e6b316d83d062cce5726&
-        // photo_id=54993765443&
-        // format=json&
-        // nojsoncallback=1&
-        // auth_token=72157720960825727-a8bc48f55acbafc8&
-        // api_sig=89dc8eee7392a8133e416994a773f9f0
-        //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
-        var loginreq = new LoginUser(login.email,login.email,login.password)
+         var loginreq = new LoginUser(login.email,login.email,login.password)
         var res = this.http.post<UsersResponse>(
             '/users/login',
             loginreq
@@ -202,18 +173,9 @@ class FlickrService {
 
     public List_user(data : BehaviorSubject<UsersResponse[]  | undefined>)
     {
-        //https://www.flickr.com/services/rest/?
-        // method=flickr.photos.getInfo&
-        // api_key=a9ea63761e96e6b316d83d062cce5726&
-        // photo_id=54993765443&
-        // format=json&
-        // nojsoncallback=1&
-        // auth_token=72157720960825727-a8bc48f55acbafc8&
-        // api_sig=89dc8eee7392a8133e416994a773f9f0
-        //https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e3187ef450a7c5c2a9429c10f06297d4&photo_id=54993765443&format=json&nojsoncallback=1
 
         var res = this.http.get<UsersResponse[]>(
-            '/users' ).subscribe(data) ;
+            '/users' ).subscribe(data.next.bind(data)) ;
     }
 
     public async Create_user(email : string,password: string,isAdmin : boolean){
