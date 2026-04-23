@@ -1,5 +1,5 @@
 // cypress/e2e/navigation.cy.ts
-// Tests E2E complets — Routage, guards et navigation entre pages
+// Tests E2E — Routage, guards et navigation entre pages
 
 describe('Navigation & Auth Guard', () => {
 

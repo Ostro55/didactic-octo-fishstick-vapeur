@@ -44,7 +44,28 @@ Cypress.Commands.add('logout', () => {
 // ── Intercepts réutilisables ──────────────────────────────────────────────────
 
 /**
- * Intercepte et mocke l'API /games avec le fixture games.json.
+ * Intercepte et mocke POST /users/login avec une réponse dynamique.
+ * Retourne l'utilisateur du fixture users.json correspondant à l'email,
+ * ou 404 si l'email est inconnu.
+ * Alias : @loginRequest
+ * Usage : cy.mockLoginApi()
+ */
+Cypress.Commands.add('mockLoginApi', () => {
+  cy.fixture('users.json').then((users: any[]) => {
+    cy.intercept('POST', '/users/login', (req) => {
+      const user = users.find((u) => u.email === req.body.email);
+      if (user) {
+        req.reply(200, user);
+      } else {
+        req.reply(404, {});
+      }
+    }).as('loginRequest');
+  });
+});
+
+/**
+ * Intercepte et mocke l'API GET /games avec le fixture games.json.
+ * Alias : @getGames
  * Usage : cy.mockGamesApi()
  */
 Cypress.Commands.add('mockGamesApi', () => {
@@ -52,7 +73,8 @@ Cypress.Commands.add('mockGamesApi', () => {
 });
 
 /**
- * Intercepte et mocke l'API /users avec le fixture users.json.
+ * Intercepte et mocke l'API GET /users avec le fixture users.json.
+ * Alias : @getUsers
  * Usage : cy.mockUsersApi()
  */
 Cypress.Commands.add('mockUsersApi', () => {
@@ -66,6 +88,7 @@ declare global {
       loginAs(role: 'user' | 'admin'): Chainable<void>;
       loginViaUI(email: string, password: string): Chainable<void>;
       logout(): Chainable<void>;
+      mockLoginApi(): Chainable<void>;
       mockGamesApi(): Chainable<void>;
       mockUsersApi(): Chainable<void>;
     }
