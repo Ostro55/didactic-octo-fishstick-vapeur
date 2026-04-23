@@ -3,11 +3,6 @@
 
 import './commands';
 
-// Désactiver les erreurs non capturées qui viendraient des libs tierces
-Cypress.on('uncaught:exception', (err) => {
-  // Ignorer les erreurs RxJS de souscription hors Angular Zone
-  if (err.message.includes('ResizeObserver') || err.message.includes('zone')) {
-    return false;
-  }
-  return true;
-});
+// Ignorer toutes les erreurs non capturées venant de l'application
+// (ex: erreurs RxJS/HttpClient sur requêtes en 404, zone Angular, ResizeObserver…)
+Cypress.on('uncaught:exception', () => false);

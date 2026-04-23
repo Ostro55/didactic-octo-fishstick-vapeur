@@ -8,7 +8,7 @@
     "editor": "Nintendo",
     "img_url": "https://example.com/mario.jpg",
     "release_date": "1985-09-13",
-    "status": "available"
+    "status": "accepted"
   },
   {
     "id": 2,
@@ -19,7 +19,7 @@
     "editor": "Nintendo",
     "img_url": "https://example.com/zelda.jpg",
     "release_date": "1986-02-21",
-    "status": "available"
+    "status": "accepted"
   },
   {
     "id": 3,
@@ -30,6 +30,6 @@
     "editor": "CD Projekt Red",
     "img_url": null,
     "release_date": "2020-12-10",
-    "status": "available"
+    "status": "accepted"
   }
 ]
