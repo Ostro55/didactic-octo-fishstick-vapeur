@@ -18,13 +18,28 @@
             </label>
 
             <label class="field">
+                <span>Editor</span>
+                <input type="text" formControlName="editor" placeholder="Auteur">
+            </label>
+
+            <label class="field">
+                <span>Image</span>
+                <input type="text" formControlName="img_url" placeholder="image url">
+            </label>
+
+            <label class="field">
                 <span>Genre</span>
                 <select multiple class="steam-select" (change)="onGenreChange($event)">
-        @for (g of genres; track g) {
-            <option [value]="g">{{ g }}</option>
-        }
-    </select>
-</label>
+                    @for (g of genres; track g) {
+                    <option [value]="g">{{ g }}</option>
+                    }
+                </select>
+            </label>
+
+            <label class="field">
+                <span>Description</span>
+                <input type="text" formControlName="description" placeholder="Game description">
+            </label>
 
             <button type="submit" class="primary-btn">Add game</button>
         </form>

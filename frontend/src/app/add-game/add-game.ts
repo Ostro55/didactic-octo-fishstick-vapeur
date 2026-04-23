@@ -39,6 +39,9 @@ export class AddGame {
       this.theForm = new FormBuilder().group({
         name: [this.name],
         price: [this.price],
+        description: [''],
+        img_url: [''],
+        editor: ['']
       });
   }
 
@@ -53,7 +56,16 @@ export class AddGame {
 
   public addgame(){
     let formValues = this.theForm.getRawValue();
-    var body:GameRequest = new GameRequest(formValues.name,formValues.price,this.genre,new Date(Date.now()),this.user.userInfo?.id)
+    var body:GameRequest = new GameRequest(
+        formValues.name,
+        formValues.price,
+        this.genre,
+        new Date(Date.now()),
+        this.user.userInfo?.id,
+        formValues.description || null,
+      formValues.img_url || null,
+      formValues.editor || null
+    )
     console.log(body)
     this.api.add_game(body)
     this.router.navigateByUrl('/');

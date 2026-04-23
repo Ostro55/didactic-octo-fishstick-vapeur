@@ -4,7 +4,11 @@
     <p> name: {{image.name}}</p>
     <!-- <p> description: {{image.description}}</p> -->
     <p> editor: {{image.editor}}</p>
-    <p> price: {{image.price}}</p>
+    @if (image.price <= 0) {
+        <p>price: FREE!</p>
+    } @else {
+        <p> price: {{image.price}}</p>
+    }
     <p> genre: {{image.genre}}</p>
 
     <!-- <p> date publication: {{image.makingTime}}</p> -->

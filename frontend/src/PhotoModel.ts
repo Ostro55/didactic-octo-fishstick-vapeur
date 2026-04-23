@@ -37,19 +37,28 @@ export class GameRequest {
     public genre: string[];
     public makingTime: Date;
     public userId: string | undefined;
+    public description: string | null;
+    public img_url: string | null;
+    public editor: string | null;
 
     constructor(
         name: string = "",
         price: number = 1,
         genre: string[] = [],
         makingTime: Date = new Date(Date.now()),
-        id:string | undefined
+        id:string | undefined,
+        description: string | null = null,
+        img_url: string | null = null,
+        editor: string | null = null
     ) {
         this.name = name;
         this.price = price;
         this.genre = genre;
         this.makingTime = makingTime;
         this.userId = id;
+        this.description = description;
+        this.img_url = img_url;
+        this.editor = editor;
     }
 
 }
@@ -99,7 +108,7 @@ export class PhotoSmall {
         name: string,
         price: number,
         genre: string[],
-        makingTime: string
+        makingTime: string,
     ) {
         this.id = id;
         this.name = name;

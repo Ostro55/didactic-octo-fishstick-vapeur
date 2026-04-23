@@ -63,7 +63,7 @@
 
 .field input,
 .steam-select {
-    width: 100%;
+    width: 90%;
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(9, 14, 20, 0.75);
     color: #eaf2fb;

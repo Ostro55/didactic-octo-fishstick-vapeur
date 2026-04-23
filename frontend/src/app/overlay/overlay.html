@@ -13,8 +13,12 @@
                     <h2 class="photo-title">{{title || 'Sans titre'}}</h2>
                     <p class="photo-author"><strong>Auteur:</strong> {{autheur || 'Inconnu'}}</p>
                     <p class="photo-date"><strong>Realease Date:</strong> {{realease_date || "No release announced"}}</p>
-                    <p class="photo-price"><strong>Prix:</strong> {{price}} €</p>
-                    <p class="photo-genre"><strong>Genre:</strong> {{genre?.join(', ')}}</p>
+                    @if (price <= 0) {
+                    <p class="photo-price"><strong>Prix:</strong> FREE! </p>
+                    } @else {
+                        <p class="photo-price"><strong>Prix:</strong> {{price}} €</p>
+                    }
+                    <p class="photo-genre"><strong>Genre:</strong> {{genre.join(', ')}}</p>
                     @if(description != "")
                     {
                         <p class="photo-desc"><strong>Description:</strong> {{description}}</p>
