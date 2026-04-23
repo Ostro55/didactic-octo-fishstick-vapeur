@@ -264,6 +264,34 @@ paths:
         "404":
           description: Utilisateur introuvable ou credentials invalides.
 
+  /admin/audit/events:
+    get:
+      summary: Lire les derniers evenements d'audit Kafka
+      description: |
+        Lit les N derniers messages du topic d'audit et retourne la liste (ordre: plus recent en premier).
+        Endpoint actif uniquement si `audit.kafka.enabled=true`.
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 50
+          description: Nombre maximal d'evenements retournes.
+      responses:
+        "200":
+          description: Evenements d'audit lus depuis Kafka.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuditKafkaEventsResponse"
+        "400":
+          description: Parametre `limit` invalide.
+        "503":
+          description: Kafka indisponible.
+
 components:
   schemas:
     Game:
@@ -430,3 +458,51 @@ components:
       required:
         - email
         - password
+
+    AuditKafkaEventsResponse:
+      type: object
+      properties:
+        topic:
+          type: string
+        count:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/AuditKafkaRecord"
+      required:
+        - topic
+        - count
+        - items
+
+    AuditKafkaRecord:
+      type: object
+      properties:
+        partition:
+          type: integer
+        offset:
+          type: integer
+          format: int64
+        timestamp:
+          type: integer
+          format: int64
+          description: Timestamp Kafka (ms since epoch).
+        key:
+          type: string
+          nullable: true
+        event:
+          type: object
+          nullable: true
+          description: Contenu JSON parse du message (si parse OK).
+          additionalProperties: true
+        raw:
+          type: string
+          nullable: true
+          description: Valeur brute (si le JSON n'a pas pu etre parse).
+      required:
+        - partition
+        - offset
+        - timestamp
+        - key
+        - event
+        - raw

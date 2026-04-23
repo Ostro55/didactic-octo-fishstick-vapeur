@@ -149,7 +149,7 @@ class GameControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("accepted"));
 
-        mvc.perform(put("/games/" + gameId + "/rejected"))
+        mvc.perform(delete("/games/" + gameId + "/rejected"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(gameId))
                 .andExpect(jsonPath("$.status").value("accepted"));

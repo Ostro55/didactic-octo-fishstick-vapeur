@@ -82,6 +82,10 @@ Active la publication des evenements d'audit vers Kafka. Variables importantes:
 - `AUDIT_TOPIC` par defaut `audit-events`
 - `AUDIT_KAFKA_ENABLED`
 
+### `kafka-ui`
+
+- Kafka-UI: http://localhost:8082/
+
 ## Documentation API
 
 - Swagger UI: `http://localhost:8080/swagger-ui.html`
