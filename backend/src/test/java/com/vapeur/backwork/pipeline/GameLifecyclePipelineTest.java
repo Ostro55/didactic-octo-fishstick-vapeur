@@ -58,7 +58,7 @@ class GameLifecyclePipelineTest {
 		void userSubmit_setsPending() throws Exception {
 			long userId = createUser("alice", "alice@mail.com", false);
 
-			mvc.perform(post("/games/save").param("userId", String.valueOf(userId))
+			mvc.perform(post("/games").param("userId", String.valueOf(userId))
 							.contentType(MediaType.APPLICATION_JSON)
 							.content(gameJson("Celeste", 20, GameGenre.action)))
 					.andExpect(status().isCreated())
@@ -71,7 +71,7 @@ class GameLifecyclePipelineTest {
 		void adminSubmit_setsAccepted() throws Exception {
 			long adminId = createUser("admin", "admin@mail.com", true);
 
-			mvc.perform(post("/games/save").param("userId", String.valueOf(adminId))
+			mvc.perform(post("/games").param("userId", String.valueOf(adminId))
 							.contentType(MediaType.APPLICATION_JSON)
 							.content(gameJson("Doom", 40, GameGenre.action, GameGenre.horror)))
 					.andExpect(status().isCreated())
@@ -87,7 +87,7 @@ class GameLifecyclePipelineTest {
 			// Même si le payload envoie "accepted", le service doit l'ignorer
 			String payload = "{\"name\":\"Hades\",\"price\":25,\"status\":\"accepted\",\"genre\":[\"action\"]}";
 
-			mvc.perform(post("/games/save").param("userId", String.valueOf(userId))
+			mvc.perform(post("/games").param("userId", String.valueOf(userId))
 							.contentType(MediaType.APPLICATION_JSON)
 							.content(payload))
 					.andExpect(status().isCreated())
@@ -97,7 +97,7 @@ class GameLifecyclePipelineTest {
 		@Test
 		@DisplayName("Submitting with an unknown userId -> 404")
 		void submit_unknownUser_returns404() throws Exception {
-			mvc.perform(post("/games/save").param("userId", "999999")
+			mvc.perform(post("/games").param("userId", "999999")
 							.contentType(MediaType.APPLICATION_JSON)
 							.content(gameJson("Ghost of Tsushima", 50, GameGenre.action)))
 					.andExpect(status().isNotFound());
@@ -142,7 +142,7 @@ class GameLifecyclePipelineTest {
 		@DisplayName("Accepting a non-existent game -> 500 (contrat API actuel)")
 		void accept_nonExistentGame_returns500() throws Exception {
 			mvc.perform(put("/games/999999/accept"))
-					.andExpect(status().isInternalServerError());
+					.andExpect(status().isNotFound());
 		}
 
 		@Test
@@ -186,7 +186,7 @@ class GameLifecyclePipelineTest {
 
 	/** Soumet un jeu via POST /games/save et retourne l'id du jeu créé. */
 	private long submitGame(long userId, String name, long price, GameGenre... genres) throws Exception {
-		MvcResult result = mvc.perform(post("/games/save").param("userId", String.valueOf(userId))
+		MvcResult result = mvc.perform(post("/games").param("userId", String.valueOf(userId))
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(gameJson(name, price, genres)))
 				.andExpect(status().isCreated())
