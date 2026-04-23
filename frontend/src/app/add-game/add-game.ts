@@ -67,7 +67,7 @@ export class AddGame {
       formValues.editor || null
     )
     console.log(body)
-    this.api.add_game(body)
+    this.api.add_game(body, this.user.userInfo?.id)
     this.router.navigateByUrl('/');
   }
 
