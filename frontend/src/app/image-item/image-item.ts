@@ -46,7 +46,7 @@ export class ImageItem {
 
   public showinfo()
   {
-      this.overlay.overlaybehavior.next(this.photoflicker)
+      this.overlay.overlaybehavior.next(this.image)
       this.overlay.show(this.image,this.image.release_date)
   }
 

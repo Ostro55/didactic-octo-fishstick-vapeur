@@ -18,35 +18,27 @@ export class Overlay {
   public overlay = inject(OverlayService);
 
 
-  public autheur: string = "test";
-  public title:string = ""
-
-  public date:string = "";
-
-  public description:string = "";
-
-
-  public location: string  = "";
-  public lat: string = "";
+  public autheur: string  | null | undefined = "test";
+  public title:string  | null | undefined = ""
+  public description:string | null | undefined = "";
+  public img_url: string | null | undefined = "";
+  public genre: string[] = [];
+  public realease_date: string | null | undefined = "";
+  public price: number = 0;
 
   ngOnInit()
   {
     this.overlay.overlaybehavior.subscribe(a => {
       if (a != undefined)
       {
-        console.log()
-        this.autheur = a.photo.owner.username;
-        this.title = a.photo.title._content;
-        this.description = a.photo.description._content;
-        if (a.photo.location !=undefined)
-        {
-          this.location = a.photo.location.country._content + "," + a.photo.location.region._content + "," + a.photo.location.locality._content;
-          this.lat = "lat: " + a.photo.location.latitude + ", long" + a.photo.location.longitude;
-        }
-        else {
-          this.location = "";
-          this.lat = "";
-        }
+        console.log(a)
+        this.autheur = a.editor;
+        this.title = a.name;
+        this.description = a.description;
+        this.img_url = a.img_url;
+        this.genre = a.genre;
+        this.realease_date = a.release_date;
+        this.price = a.price;
       }
     })
   }

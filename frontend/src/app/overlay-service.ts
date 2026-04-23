@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {PhotoSmall} from "../PhotoModel";
+import {Photo, PhotoSmall} from "../PhotoModel";
 import {BehaviorSubject} from "rxjs";
 import {FlickrPhotoResponse} from "../PhotoURL";
 
@@ -8,7 +8,7 @@ import {FlickrPhotoResponse} from "../PhotoURL";
 })
 export class OverlayService {
 
-  public overlaybehavior =  new BehaviorSubject<FlickrPhotoResponse | undefined>(undefined);
+  public overlaybehavior =  new BehaviorSubject<PhotoSmall | undefined>(undefined);
 
 
   public display = "none";

@@ -1,49 +1,113 @@
-<style>
-    .overlay {
-        position: fixed;
-        display: none;
-        width: 80%;
-        height: 80%;
-        top: 10%;
-        left: 10%;
-        right: 0;
-        bottom: 0;
-        background-color: rgb(255, 255, 255);
-        z-index: 2;
-        cursor: pointer;
-        border-radius: 8px;
-        border-color: blue;
-        border-style: solid;
-
-    }
-    img{
-        max-width:1500px;
-        max-height: 1000px;
-        height: auto;
-    }
-</style>
-
 <div class="overlay" [style.display]="overlay.display">
-    <button (click)="overlay.hide()">X</button>
+    <div class="overlay-card">
+        <button class="close-btn" (click)="overlay.hide()">✕</button>
 
-    @if( (overlay.photo.image | async) && title != "")
-    {
-        <p> auteur: {{autheur}}</p>
-        <p> title : {{title}}</p>
-        <p> date publication: {{overlay.date}}</p>
-        @if(description != "")
+        @if( (overlay.photo.image | async) )
         {
-            <p> description: {{description}}</p>
-        }
-        @if(lat != "")
-        {
-            <p> position: {{lat}}</p>
-            <p> location: {{location}}</p>
+            <div class="overlay-body">
+                <div class="overlay-media">
+                    <img [src]="img_url" alt="{{title}}">
+                </div>
+
+                <div class="overlay-info">
+                    <h2 class="photo-title">{{title || 'Sans titre'}}</h2>
+                    <p class="photo-author"><strong>Auteur:</strong> {{autheur || 'Inconnu'}}</p>
+                    <p class="photo-date"><strong>Realease Date:</strong> {{realease_date || "No release announced"}}</p>
+                    <p class="photo-price"><strong>Prix:</strong> {{price}} €</p>
+                    <p class="photo-genre"><strong>Genre:</strong> {{genre?.join(', ')}}</p>
+                    @if(description != "")
+                    {
+                        <p class="photo-desc"><strong>Description:</strong> {{description}}</p>
+                    }
+                </div>
+            </div>
         }
 
+    </div>
+</div>
+
+<style>
+    :root{
+        --steam-panel: rgba(16, 24, 35, 0.86);
+        --steam-panel-border: rgba(130, 170, 210, 0.16);
+        --steam-accent: #66c0f4;
+        --text-light: #dfe7f1;
+        --muted: rgba(223,231,241,0.6);
     }
 
-</div>
+    .overlay{
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(3,7,12,0.55);
+        z-index: 9999;
+        padding: 20px;
+    }
+
+    .overlay-card{
+        width: 100%;
+        max-width: 1100px;
+        background: linear-gradient(180deg, var(--steam-panel), rgba(10,16,24,0.95));
+        border-radius: 14px;
+        border: 1px solid var(--steam-panel-border);
+        box-shadow:
+            0 18px 50px rgba(0,0,0,0.45),
+            inset 0 1px 0 rgba(255,255,255,0.02);
+        overflow: hidden;
+        position: relative;
+        color: var(--text-light);
+        backdrop-filter: blur(8px);
+    }
+
+    .close-btn{
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: linear-gradient(180deg, #7cc4ff 0%, #4a93df 100%);
+        color: #08121d;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(74,147,223,0.18);
+    }
+
+    .overlay-body{
+        display: flex;
+        gap: 20px;
+        padding: 22px;
+    }
+
+    .overlay-media{
+        flex: 1 1 60%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .overlay-media img{max-width:100%; max-height:70vh; height:auto; border-radius:6px}
+
+    .overlay-info{flex:1 1 40%; padding: 6px 12px; color:var(--text-light)}
+    .photo-title{margin:0 0 8px 0; font-size:1.4rem}
+    .photo-author,.photo-date,.photo-price,.photo-genre,.photo-status,.photo-desc,.photo-location{margin:6px 0; font-size:0.95rem; color:var(--muted)}
+
+    .photo-price strong, .photo-title{color:var(--text-light)}
+    .photo-price{color:var(--steam-accent)}
+
+    @media (max-width: 800px){
+        .overlay-body{flex-direction:column}
+        .overlay-media{order:0}
+    }
+
+    /* Keep page button hidden here */
+    .steam-add-game-btn{display:none}
+</style>
 
 
 
