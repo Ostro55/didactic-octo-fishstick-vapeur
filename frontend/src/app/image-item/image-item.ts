@@ -1,9 +1,9 @@
 import {Component, inject, Input} from '@angular/core';
 import {AsyncPipe, NgOptimizedImage} from "@angular/common";
 import {BehaviorSubject} from "rxjs";
-import {FlickrPhotoResponse, PhotoInfo} from "../../PhotoURL";
+import {FlickrPhotoResponse, PhotoInfo} from "../../GameURL";
 import FlickrService from "../flickr-service";
-import {Photo, PhotoSmall} from "../../PhotoModel";
+import {Game, GameSmall} from "../../GameModel";
 import {OverlayService} from "../overlay-service";
 
 @Component({
@@ -16,7 +16,8 @@ import {OverlayService} from "../overlay-service";
 export class ImageItem {
 
   @Input()  public id : number = 0;
-  @Input() public image: PhotoSmall = PhotoSmall.PhotoSmall2();
+  @Input() public image: GameSmall = GameSmall.GameSmall2();
+    //this part work perfectly
 
     public overlay = inject(OverlayService);
 

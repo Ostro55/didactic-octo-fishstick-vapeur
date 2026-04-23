@@ -1,7 +1,7 @@
 import {BehaviorSubject} from "rxjs";
-import {FlickrPhotoResponse, PhotoInfo} from "./PhotoURL";
+import {FlickrPhotoResponse, PhotoInfo} from "./GameURL";
 
-export interface Photo {
+export interface Game {
     description: string | null;
     editor: string | null;
     genre: string[];
@@ -64,20 +64,20 @@ export class GameRequest {
 }
 
 
-export interface PhotosPage {
+export interface GamePage {
     page: number;
     pages: number;
     perpage: number;
     total: number;
-    photo: Photo[];
+    photo: Game[];
 }
 
 export interface ApiResponse {
-    photos: PhotosPage;
+    photos: GamePage;
     stat: string;
 }
 
-export class PhotoSmall {
+export class GameSmall {
     description: string = "" ;
     editor: string = "";
     genre: string[] = [];
@@ -91,9 +91,9 @@ export class PhotoSmall {
     public image: BehaviorSubject<FlickrPhotoResponse  | undefined> = new BehaviorSubject<FlickrPhotoResponse | undefined>( undefined);
 
 
-    public static PhotoSmall2()
+    public static GameSmall2()
     {
-        let p = new PhotoSmall();
+        let p = new GameSmall();
         p.id =- -1;
         p.name = "";
         p.price = 0;
@@ -103,20 +103,6 @@ export class PhotoSmall {
         return p;
     }
 
-    public PhotoSmall(
-        id: number,
-        name: string,
-        price: number,
-        genre: string[],
-        makingTime: string,
-    ) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.genre = genre;
-        this.makingTime = makingTime;
-        return this;
-    }
 }
 
 

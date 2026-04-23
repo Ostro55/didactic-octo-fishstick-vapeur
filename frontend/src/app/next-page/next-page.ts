@@ -2,7 +2,7 @@ import {Component, inject, Input} from '@angular/core';
 import FlickrService from "../flickr-service";
 import {AsyncPipe} from "@angular/common";
 import {BehaviorSubject} from "rxjs";
-import {PhotoSmall} from "../../PhotoModel";
+import {GameSmall} from "../../GameModel";
 
 @Component({
   selector: 'app-next-page',
@@ -13,7 +13,7 @@ import {PhotoSmall} from "../../PhotoModel";
   styleUrl: './next-page.css',
 })
 export class NextPage {
-  @Input() imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
+  @Input() imagelistv2 : BehaviorSubject<GameSmall[]> = new BehaviorSubject<GameSmall[]>([]);
 
   protected api = inject(FlickrService);
 

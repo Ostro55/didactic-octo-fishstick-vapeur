@@ -6,9 +6,10 @@ import {AuthGuard} from "../auth-guard";
 import FlickrService from "../flickr-service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {form} from "@angular/forms/signals";
-import {PhotoSmall} from "../../PhotoModel";
+import {GameSmall} from "../../GameModel";
 import {BehaviorSubject} from "rxjs";
 import {AsyncPipe} from "@angular/common";
+import {UsersResponse} from "../../GameURL";
 
 @Component({
   selector: 'app-admin-page',
@@ -22,18 +23,21 @@ import {AsyncPipe} from "@angular/common";
   styleUrl: './admin-page.css',
 })
 export class AdminPage {
+  //this part work perfectly
   public authService: AuthService = inject(AuthService)
 
   constructor( private router: Router) { }
   protected guard = inject(AuthGuard);
   protected api = inject(FlickrService);
-  imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
-
-  selectedGame: PhotoSmall | null = null;
+  imagelistv2 : BehaviorSubject<GameSmall[]> = new BehaviorSubject<GameSmall[]>([]);
+  listUser : BehaviorSubject<UsersResponse[] | undefined> = new BehaviorSubject<UsersResponse[] | undefined>([]);
+  selectedGame: GameSmall | null = null;
   showOverlay = false;
 
   ngOnInit() {
     this.api.searchParams_request(this.imagelistv2)
+    this.listUser.subscribe(value => {console.log(value) ;
+    console.log("this was the list of user")})
 
   }
 
@@ -42,19 +46,19 @@ export class AdminPage {
     this.router.navigateByUrl('/connexion');
   }
 
-  ban(userid : string)
+  ban(userid : string )
   {
-    console.log("ban user with id: " + userid);
-
+    console.log(userid)
+    this.api.ban_user(userid)
   }
 
-  unban(userid : string)
+  found(userid : string )
   {
-    console.log("unban user with id: " + userid);
-
+    console.log(userid)
+    this.api.List_user(this.listUser)
   }
 
-  openOverlay(game: PhotoSmall) {
+  openOverlay(game: GameSmall) {
     this.selectedGame = game;
     this.showOverlay = true;
   }
@@ -84,4 +88,6 @@ export class AdminPage {
   }
 
   protected readonly form = form;
+  protected userid: string = "";
+  protected username: string = "";
 }

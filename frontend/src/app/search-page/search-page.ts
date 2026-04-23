@@ -1,10 +1,10 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {ImageList} from "../image-list/image-list";
 import {NextPage} from "../next-page/next-page";
 import {Overlay} from "../overlay/overlay";
 import {SearchBar} from "../search-bar/search-bar";
 import {BehaviorSubject} from "rxjs";
-import {PhotoSmall} from "../../PhotoModel";
+import {GameSmall} from "../../GameModel";
 import {HomeButton} from "../home-button/home-button";
 
 @Component({
@@ -20,7 +20,7 @@ import {HomeButton} from "../home-button/home-button";
   styleUrl: './search-page.css',
 })
 export class SearchPage {
-    imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
+    imagelistv2 : BehaviorSubject<GameSmall[]> = new BehaviorSubject<GameSmall[]>([]);
 
 NgOnInit()
 {

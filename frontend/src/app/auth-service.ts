@@ -2,8 +2,8 @@ import {inject, Injectable} from '@angular/core';
 import {UserConnectd, Utilisateur} from "./utilisateur";
 import FlickrService from './flickr-service'
 import {BehaviorSubject} from "rxjs";
-import {UsersResponse} from "../PhotoURL";
-import {LoginUser} from "../PhotoModel";
+import {UsersResponse} from "../GameURL";
+import {LoginUser} from "../GameModel";
 import {LoginPage} from "./login-page/login-page";
 
 @Injectable({

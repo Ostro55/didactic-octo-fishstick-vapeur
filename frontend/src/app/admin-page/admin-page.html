@@ -1,7 +1,7 @@
 <app-home-button ></app-home-button>
 
 <div class="admin-container">
-
+<!-- this part work perfectly-->
     <div class="admin-card header-card">
         <h1>🎮 Super Administrateur</h1>
         <p class="email">
@@ -31,18 +31,26 @@
 
         <div class="admin-card">
             <h2>🚫 Bannir un utilisateur</h2>
-            <form (ngSubmit)="ban($event)">
-                <input type="text" id="userid" name="userid" placeholder="ID utilisateur à bannir">
-                <button type="submit" class="danger-btn">Bannir</button>
-            </form>
-        </div>
+                <input type="text" id="userid" name="userid" placeholder="ID utilisateur à bannir" [(ngModel)]="userid">
+                <button type="submit" class="danger-btn" (click)="ban(this.userid)">Bannir</button>
+            <h2> Info utilisateur</h2>
+            <input type="text" id="username" name="username" placeholder="name utilisateur" [(ngModel)]="username">
 
-        <div class="admin-card">
-            <h2>✅ Débannir un utilisateur</h2>
-            <form (ngSubmit)="unban($event)">
-                <input type="text" id="userid" name="userid" placeholder="ID utilisateur à débannir">
-                <button type="submit" class="success-btn">Débannir</button>
-            </form>
+            <button type="submit" class="danger-btn" (click)="found(this.username)">search</button>
+                    @for (user of this.listUser | async; track user.id) {
+
+                        @if (user.username == this.username) {
+                            <div class="game-item user-card">
+  <p><strong>ID :</strong> {{ user.id }}</p>
+  <p><strong>Email :</strong> {{ user.email }}</p>
+  <p><strong>Username :</strong> {{ user.username }}</p>
+  <p><strong>Admin :</strong> {{ user.isAdmin ? 'Oui' : 'Non' }}</p>
+</div>
+
+                        }
+
+                    }
+
         </div>
 
     </div>

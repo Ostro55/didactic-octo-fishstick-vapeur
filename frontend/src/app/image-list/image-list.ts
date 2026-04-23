@@ -1,7 +1,7 @@
 import {Component, inject, Input} from '@angular/core';
 import FlickrService from "../flickr-service";
 import {ImageItem} from "../image-item/image-item";
-import {Photo, PhotoSmall} from "../../PhotoModel";
+import {Game, GameSmall} from "../../GameModel";
 import {AsyncPipe} from "@angular/common";
 import {BehaviorSubject} from "rxjs";
 
@@ -15,7 +15,7 @@ import {BehaviorSubject} from "rxjs";
   styleUrl: './image-list.css',
 })
 export class ImageList {
-  @Input() imagelistv2 : BehaviorSubject<PhotoSmall[]> = new BehaviorSubject<PhotoSmall[]>([]);
+  @Input() imagelistv2 : BehaviorSubject<GameSmall[]> = new BehaviorSubject<GameSmall[]>([]);
 
   protected api = inject(FlickrService);
 
@@ -24,7 +24,7 @@ export class ImageList {
   public v2 = 0;
 
 
-  public list: PhotoSmall[] = [];
+  public list: GameSmall[] = [];
 
   ngOnInit()
   {
