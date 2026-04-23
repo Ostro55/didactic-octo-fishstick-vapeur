@@ -1,4 +1,4 @@
 name,price,description,release_date,img_url,editor,genre,status
-"Doom Eternal",5999,"Fast-paced FPS in hell",2020-03-20,https://example.com/doom-eternal.jpg,id Software,action|horror,accepted
-"Stardew Valley",1499,"Relaxing farming and life sim",2016-02-26,https://example.com/stardew-valley.jpg,ConcernedApe,romance|singleplayer,accepted
-"Left 4 Dead 2",999,"Co-op zombie survival shooter",2009-11-17,https://example.com/left4dead2.jpg,Valve,action|horror|multiplayer,accepted
+"Doom Eternal",5999,"Fast-paced FPS in hell",2020-03-20,https://cdn-uploads.gameblog.fr/img/news/418419_640710162d99c.jpg,id Software,action|horror,accepted
+"Stardew Valley",1499,"Relaxing farming and life sim",2016-02-26,https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/413150/capsule_616x353.jpg?t=1754692865,ConcernedApe,romance|singleplayer,accepted
+"Left 4 Dead 2",999,"Co-op zombie survival shooter",2009-11-17,https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/500/capsule_616x353.jpg?t=1745368560,Valve,action|horror|multiplayer,accepted

@@ -53,7 +53,7 @@ export class SiginPage {
 
   async Singup() {
     console.log(this.loginForm.value);
-    await this.api.Create_user(this.loginForm.value['email'],this.loginForm.value['password'],true)
+    await this.api.Create_user(this.loginForm.value['email'],this.loginForm.value['password'],false)
     await this.router.navigateByUrl('/');
 
   }

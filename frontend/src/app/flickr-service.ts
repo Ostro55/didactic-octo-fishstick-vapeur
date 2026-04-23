@@ -7,7 +7,6 @@ import {CreateUser, FlickrPhotoResponse, PhotoInfo, RecommendedGame, UsersRespon
 import {AddGame} from "./add-game/add-game";
 import {Utilisateur} from "./utilisateur";
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -137,15 +136,25 @@ class FlickrService {
   }
 
 
-    public add_game(game: GameRequest)
+    public add_game(game: GameRequest, userId: string | undefined)
     {
-
-        var res = this.http.post(
-            '/games',
-            game,
-            ).subscribe(() => {
-                console.log("send img")
-        });
+        if (userId == null || userId == undefined)
+        {
+            var res = this.http.post(
+                '/games',
+                game,
+                ).subscribe(() => {
+                    console.log("send img")
+            });
+        } else {
+            console.log("Connected user adding game")
+            var res = this.http.post(
+                '/games?userId=' + userId,
+                game,
+                ).subscribe(() => {
+                    console.log("send img")
+            });
+        }
     }
 
 
