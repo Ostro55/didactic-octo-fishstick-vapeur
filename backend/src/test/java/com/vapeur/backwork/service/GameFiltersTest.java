@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GameFiltersTest {
 
     @Test
-    void apply_nameFilter_isEqualsIgnoreCase() {
+    void apply_nameFilter_isSubstringIgnoreCase() {
         Game a = new Game();
         a.setName("Doom");
 
@@ -23,7 +23,7 @@ class GameFiltersTest {
         c.setName("Doom Eternal");
 
         List<Game> out = GameFilters.apply(List.of(a, b, c), "doom", null, null, null);
-        assertEquals(List.of(a, b), out);
+        assertEquals(List.of(a, b, c), out);
     }
 
     @Test
