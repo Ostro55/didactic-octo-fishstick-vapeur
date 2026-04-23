@@ -78,11 +78,15 @@ npx cypress open
 
 After the pipeline passes:
 ```bash
-TAG=[branch-name] docker compose up
+TAG=sha-abc1234 docker compose up -d
+```
+If you don't know the sha : 
+``` bash
+git log --oneline
 ```
 
 If you are on the `main` branch, use:
 ```bash
-docker compose up
+TAG=main docker compose up -d
 ```
 Then go to: `http://localhost/`
